@@ -139,3 +139,9 @@ a {
     background: var(--wv-sunk);
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

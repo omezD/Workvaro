@@ -1,0 +1,89 @@
+@switch (kind()) {
+  @case ('checkin') {
+    <div class="panel forest">
+      <svg class="arc" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="rgb(255 255 255 / 8%)" stroke-width="10" />
+        <circle class="arc-fill" cx="60" cy="60" r="54" fill="none" stroke="var(--wv-leaf)" stroke-width="10" stroke-linecap="round"
+          stroke-dasharray="339.3" stroke-dashoffset="210" transform="rotate(-90 60 60)" />
+      </svg>
+      <span class="label">My day</span>
+      <div class="swap">
+        <span class="state-out">You haven't checked in yet</span>
+        <span class="state-in">Checked in at 09:12</span>
+      </div>
+      <div class="clock">09:12</div>
+      <span class="press">Check in</span>
+      <div class="map">
+        <span class="map-dot"></span>
+        <span>Your manager sees you're in</span>
+      </div>
+    </div>
+  }
+  @case ('apply') {
+    <div class="panel">
+      <span class="label">Apply for leave</span>
+      <div class="field"><small>Leave type</small><b>Casual leave</b><span class="hint">11 left</span></div>
+      <div class="week">
+        @for (d of week; track d.n) {
+          <div class="day" [class.on]="d.on" [class.weekend]="d.weekend">
+            <small>{{ d.d }}</small>
+            <b>{{ d.n }}</b>
+          </div>
+        }
+      </div>
+      <div class="summary"><b><span class="days-count">3</span> working days</b><span>Weekends and holidays are not counted.</span></div>
+      <div class="row-end">
+        <span class="send">Send request</span>
+      </div>
+      <div class="toast">Sent to Manoj for approval</div>
+    </div>
+  }
+  @case ('approve') {
+    <div class="panel">
+      <span class="label">Waiting for you</span>
+      <div class="req">
+        <wv-avatar name="Arjun Nair" [size]="38" />
+        <div class="req-text">
+          <b>Arjun Nair, casual leave</b>
+          <span>12 to 14 Oct, 3 days. Family function</span>
+        </div>
+        <div class="req-end">
+          <span class="chip chip-pending">Pending</span>
+          <span class="chip chip-approved">Approved</span>
+        </div>
+      </div>
+      <div class="actions">
+        <span class="decide no">Reject</span>
+        <span class="decide yes">Approve</span>
+      </div>
+      <div class="balance">
+        <svg viewBox="0 0 76 76" width="76" height="76">
+          <circle cx="38" cy="38" r="31" fill="none" stroke="var(--wv-sunk)" stroke-width="8" />
+          <circle class="ring-fill" cx="38" cy="38" r="31" fill="none" stroke="var(--wv-leaf)" stroke-width="8" stroke-linecap="round"
+            stroke-dasharray="194.8" stroke-dashoffset="64.9" transform="rotate(-90 38 38)" />
+        </svg>
+        <div><b><span class="left">8</span> of 12</b><span>Arjun's casual leave left</span></div>
+      </div>
+    </div>
+  }
+  @case ('away') {
+    <div class="panel">
+      <span class="label">Who's away in October</span>
+      <div class="strip">
+        @for (p of away; track p.name) {
+          <div class="strip-row">
+            <span class="name">{{ p.name }}</span>
+            <div class="track">
+              @for (i of days; track i) {
+                <span class="tick" [class.we]="i % 7 === 5 || i % 7 === 6"></span>
+              }
+              <span class="bar" [class.pending]="p.pending" [style.left.%]="(p.from / 26) * 100" [style.width.%]="(p.span / 26) * 100"></span>
+            </div>
+          </div>
+        }
+        <span class="today" [style.left]="'calc(110px + (100% - 110px) * ' + 6.5 / 26 + ')'"></span>
+      </div>
+      <div class="legend"><span><i class="sw ok"></i>Approved</span><span><i class="sw wait"></i>Pending</span></div>
+    </div>
+  }
+}

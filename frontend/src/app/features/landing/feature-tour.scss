@@ -1,0 +1,153 @@
+:host {
+  display: block;
+}
+
+.intro {
+  max-width: 720px;
+  margin-bottom: 40px;
+
+  p {
+    color: var(--wv-muted);
+    font-size: var(--wv-text-lg);
+    margin: 14px 0 0;
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(32px, 6vw, 96px);
+}
+
+article {
+  min-height: 72vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 0;
+  opacity: 0.32;
+  transition: opacity 0.4s ease;
+
+  &.active {
+    opacity: 1;
+  }
+
+  h3 {
+    font-size: clamp(26px, 3vw, 36px);
+    font-stretch: 88%;
+    letter-spacing: -0.025em;
+  }
+
+  p {
+    font-size: var(--wv-text-lg);
+    color: var(--wv-muted);
+    margin: 14px 0 0;
+    max-width: 46ch;
+    line-height: 1.6;
+  }
+
+  ul {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+
+    &::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      flex: none;
+      border-radius: 50%;
+      background: var(--wv-leaf-soft)
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231C7A4B' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l4 4L19 6'/%3E%3C/svg%3E")
+        center / 11px no-repeat;
+    }
+  }
+}
+
+.stage {
+  position: relative;
+}
+
+.stage-inner {
+  position: sticky;
+  top: calc(50vh - 200px);
+  height: 400px;
+}
+
+.staged {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: none;
+
+  &.on {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -36px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+  span {
+    width: 8px;
+    height: 8px;
+    border-radius: 99px;
+    background: var(--wv-line-strong);
+    transition: width 0.3s ease, background-color 0.3s ease;
+
+    &.on {
+      width: 24px;
+      background: var(--wv-leaf);
+    }
+  }
+}
+
+.inline {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .stage {
+    display: none;
+  }
+
+  article {
+    min-height: 0;
+    opacity: 1;
+    padding: 0 0 56px;
+  }
+
+  .inline {
+    display: block;
+    margin-top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  article {
+    opacity: 1;
+  }
+}

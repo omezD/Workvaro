@@ -30,7 +30,7 @@
               }
             ],
             "styles": [
-              "node_modules/@fontsource-variable/bricolage-grotesque/index.css",
+              "node_modules/@fontsource-variable/bricolage-grotesque/wdth.css",
               "node_modules/@fontsource-variable/hanken-grotesk/index.css",
               "src/styles.scss"
             ]

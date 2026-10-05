@@ -1,0 +1,114 @@
+<div class="copy">
+  <h2 id="tour-title">One request, start to finish.</h2>
+  <p>
+    Workvaro is a simple people system for growing companies: attendance, leave, approvals and a company directory,
+    with the right view for every role. Here's a real request moving through it.
+  </p>
+  <ol class="steps">
+    @for (s of steps; track s.title; let i = $index) {
+      <li [class.on]="step() === i || reduced()">
+        <b>{{ s.title }}</b>
+        <span>{{ s.text }}</span>
+      </li>
+    }
+  </ol>
+  @if (!reduced()) {
+    <button type="button" class="toggle" (click)="toggle()" [attr.aria-pressed]="!playing()">
+      {{ playing() ? 'Pause the tour' : 'Play the tour' }}
+    </button>
+  }
+</div>
+
+<div class="frame">
+  <div class="chrome" aria-hidden="true">
+    <span></span><span></span><span></span>
+    <i>app.workvaro.com/dashboard</i>
+  </div>
+  <div class="screen" role="img" aria-label="Animated tour: Esha applies for 3 days of leave, Manoj approves it, Esha's balance drops from 11 to 8 days, and HR sees the company overview.">
+    <div class="canvas" aria-hidden="true">
+      <aside class="side">
+        <wv-logo [size]="22" />
+        <span class="nav on"></span><span class="nav"></span><span class="nav"></span><span class="nav"></span><span class="nav"></span>
+      </aside>
+
+      <!-- Esha (employee) -->
+      <section class="view esha">
+        <h3>Good morning, Esha</h3>
+        <div class="row">
+          <div class="card day">
+            <small>My day</small>
+            <b class="big">09:04</b>
+            <span>Checked in</span>
+          </div>
+          <div class="card bal">
+            <small>Leave balance</small>
+            <div class="ring-wrap">
+              <svg viewBox="0 0 76 76" width="86" height="86">
+                <circle cx="38" cy="38" r="31" fill="none" stroke="var(--wv-sunk)" stroke-width="8" />
+                <circle class="ring-fill" cx="38" cy="38" r="31" fill="none" stroke="var(--wv-leaf)" stroke-width="8" stroke-linecap="round"
+                  stroke-dasharray="194.8" stroke-dashoffset="64.9" transform="rotate(-90 38 38)" />
+              </svg>
+              <div><b><span class="ring-num">8</span> of 12</b><span>Casual leave</span></div>
+            </div>
+            <span class="apply-btn">Apply for leave</span>
+          </div>
+        </div>
+        <div class="card upcoming">
+          <small>My upcoming leave</small>
+          <div class="esha-upcoming">
+            <div><b>12 to 14 Oct</b><span>Casual leave, 3 days</span></div>
+            <span class="chip ok">Approved</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manoj (manager) -->
+      <section class="view manager">
+        <h3>Good morning, Manoj</h3>
+        <div class="card inbox">
+          <small>Waiting for you</small>
+          <div class="inbox-row">
+            <wv-avatar name="Esha Patel" [size]="40" />
+            <div><b>Esha Patel, casual leave</b><span>12 to 14 Oct, 3 days. Family function</span></div>
+            <span class="chip ok">Approved</span>
+            <span class="acts"><span class="reject-btn">Reject</span><span class="approve-btn">Approve</span></span>
+          </div>
+          <div class="inbox-row dim">
+            <wv-avatar name="Rohan Mehta" [size]="40" />
+            <div><b>Rohan Mehta, sick leave</b><span>16 Oct, 1 day</span></div>
+            <span class="chip wait">Pending</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Harini (HR) -->
+      <section class="view hr">
+        <h3>Good morning, Harini</h3>
+        <div class="row tiles">
+          <div class="card hr-tile"><b data-n="42">42</b><span>In today</span></div>
+          <div class="card hr-tile"><b data-n="3">3</b><span>On leave</span></div>
+          <div class="card hr-tile"><b data-n="5">5</b><span>Waiting for approval</span></div>
+        </div>
+        <div class="card">
+          <small>People by department</small>
+          <div class="hr-bars">
+            <div><i>Engineering</i><span style="--w: 100%"></span></div>
+            <div><i>Operations</i><span style="--w: 62%"></span></div>
+            <div><i>Finance</i><span style="--w: 34%"></span></div>
+            <div><i>Human Resources</i><span style="--w: 22%"></span></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="dialog">
+        <b>Apply for leave</b>
+        <div class="field">Casual leave</div>
+        <div class="field">Mon 12 Oct to Wed 14 Oct</div>
+        <div class="sum"><b><span class="days">3</span> working days</b></div>
+        <span class="send-btn">Send request</span>
+      </div>
+      <div class="toast">Leave request sent for 3 days</div>
+      <svg class="cursor" width="22" height="22" viewBox="0 0 24 24"><path d="M4 2l15 9-7 1.5L9 20z" fill="#13261D" stroke="#fff" stroke-width="1.5" /></svg>
+    </div>
+  </div>
+</div>

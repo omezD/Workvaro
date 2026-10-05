@@ -8,5 +8,7 @@ export const environment = {
     realm: 'ems',
     clientId: 'ems-frontend',
   },
+  // Public demo deployment (built with `npm run demo`); update before deploying
+  demoUrl: 'https://demo.example.com/app/dashboard',
   sessionTimeoutMs: 30 * 60 * 1000,
 };

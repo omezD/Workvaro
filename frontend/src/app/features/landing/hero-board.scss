@@ -1,0 +1,172 @@
+:host {
+  position: relative;
+  display: block;
+  padding-bottom: 56px;
+}
+
+.board {
+  background: var(--wv-surface);
+  border: 1px solid var(--wv-line);
+  border-radius: 20px;
+  box-shadow: 0 30px 60px -30px rgb(19 38 29 / 35%), 0 2px 6px rgb(19 38 29 / 6%);
+  padding: 18px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px 14px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  b {
+    font-family: var(--wv-font-display);
+    font-size: 18px;
+  }
+
+  span {
+    font-size: 13px;
+    color: var(--wv-muted);
+  }
+
+  .count {
+    background: var(--wv-leaf-soft);
+    color: var(--wv-leaf-text);
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-weight: 600;
+
+    b {
+      font-family: var(--wv-font-text);
+      font-size: 13px;
+    }
+  }
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: 12px;
+}
+
+li:nth-child(odd) {
+  background-image: linear-gradient(var(--wv-sunk), var(--wv-sunk));
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  b {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  small {
+    font-size: 12px;
+    color: var(--wv-muted);
+  }
+}
+
+.pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+  white-space: nowrap;
+
+  &.in {
+    background: var(--wv-leaf-soft);
+    color: var(--wv-leaf-text);
+  }
+
+  &.away {
+    background: var(--wv-gold-soft);
+    color: var(--wv-gold-text);
+  }
+
+  &.idle {
+    background: var(--wv-idle-soft);
+    color: var(--wv-idle-text);
+  }
+}
+
+.request {
+  position: absolute;
+  left: -36px;
+  right: 40px;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--wv-forest);
+  color: var(--wv-forest-ink);
+  border-radius: 16px;
+  box-shadow: 0 24px 48px -20px rgb(19 38 29 / 55%);
+
+  @media (max-width: 720px) {
+    left: 12px;
+    right: 12px;
+  }
+}
+
+.req-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  b {
+    font-size: 14px;
+  }
+
+  span {
+    font-size: 12px;
+    color: var(--wv-forest-muted);
+  }
+}
+
+.decision {
+  display: grid;
+  place-items: center;
+
+  > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.btn {
+  background: var(--wv-leaf);
+  color: var(--wv-leaf-ink);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  opacity: 0;
+}
+
+.done {
+  opacity: 1;
+}
+
+// Without animation (reduced motion, or before the script runs) the finished state shows:
+// the request already approved. The timeline sets its own starting state.

@@ -8,6 +8,8 @@ export const environment = {
     realm: 'ems',
     clientId: 'ems-frontend',
   },
+  /** Where "Try the live demo" goes: a separate deployment built with `npm run demo`. */
+  demoUrl: 'http://localhost:4300/app/dashboard',
   /** Sign the user out after this much inactivity. */
   sessionTimeoutMs: 30 * 60 * 1000,
 };

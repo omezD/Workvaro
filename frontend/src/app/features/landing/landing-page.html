@@ -1,0 +1,192 @@
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" [class.scrolled]="scrolled()">
+  <div class="wrap nav-inner">
+    <a routerLink="/" class="brand" aria-label="Workvaro home"><wv-logo /></a>
+    <nav aria-label="Sections" [class.open]="menuOpen()">
+      <a href="#features" (click)="closeMenu()">Features</a>
+      <a href="#tour" (click)="closeMenu()">How it works</a>
+      <a href="#security" (click)="closeMenu()">Security</a>
+      <a href="#pricing" (click)="closeMenu()">Pricing</a>
+      <a href="#faq" (click)="closeMenu()">FAQ</a>
+    </nav>
+    <div class="nav-actions">
+      <button mat-icon-button type="button" (click)="theme.toggle()"
+        [attr.aria-label]="theme.mode() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'">
+        <wv-icon [name]="theme.mode() === 'dark' ? 'sun' : 'moon'" />
+      </button>
+      @if (auth.authenticated()) {
+        <a mat-button routerLink="/app/dashboard" class="signin">Open Workvaro</a>
+      } @else {
+        <button mat-button type="button" class="signin" (click)="auth.login()">Sign in</button>
+      }
+      <button mat-flat-button type="button" class="demo-btn" (click)="tryDemo()">Try the live demo</button>
+      <button mat-icon-button type="button" class="menu-btn" [attr.aria-expanded]="menuOpen()" aria-label="Menu" (click)="menuOpen.set(!menuOpen())">
+        <wv-icon [name]="menuOpen() ? 'close' : 'menu'" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero -->
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <h1 id="hero-title">Leave, attendance and your team, in one calm place.</h1>
+      <p class="lead">
+        Workvaro gives growing companies one simple home for check-ins, leave requests and approvals.
+        Employees know where they stand, managers decide in a click, and HR sees the whole company.
+      </p>
+      <div class="cta">
+        <button mat-flat-button type="button" class="big" (click)="tryDemo()">Try the live demo</button>
+        <a mat-stroked-button href="#tour" class="big ghost">See how it works</a>
+      </div>
+      <p class="fine">No sign-up for the demo. It opens with a sample company you can click through as any role.</p>
+    </div>
+    <wv-hero-board class="hero-board" />
+  </section>
+
+  <!-- Who it's for -->
+  <section class="roles wrap" aria-label="Who Workvaro is for">
+    <div>
+      <b>For employees</b>
+      <p>Check in, apply for leave, see your balance and fix a missed day, from any phone or laptop.</p>
+    </div>
+    <div>
+      <b>For managers</b>
+      <p>One inbox for your team's requests, a view of who's in today and a calendar of who's away.</p>
+    </div>
+    <div>
+      <b>For HR</b>
+      <p>Everyone's records, leave rules, holidays and departments in one place, with every change logged.</p>
+    </div>
+  </section>
+
+  <!-- Features, one by one -->
+  <section id="features" class="wrap section" aria-labelledby="features-title">
+    <wv-feature-tour />
+  </section>
+
+  <!-- Product tour (in place of a video) -->
+  <section id="tour" class="band" aria-labelledby="tour-title">
+    <div class="wrap">
+      <wv-product-tour />
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="wrap section" aria-labelledby="how-title">
+    <h2 id="how-title" class="section-title">Up and running in a day.</h2>
+    <div class="how-steps">
+      <div class="steps-line" aria-hidden="true"><i></i></div>
+      <ol>
+        <li class="how-step">
+          <span class="num">1</span>
+          <h3>Set up your company</h3>
+          <p>HR adds departments, designations, leave types and this year's holidays, then adds people with their manager.</p>
+        </li>
+        <li class="how-step">
+          <span class="num">2</span>
+          <h3>Everyone signs in</h3>
+          <p>People sign in with their work email and start checking in and applying for leave the same day.</p>
+        </li>
+        <li class="how-step">
+          <span class="num">3</span>
+          <h3>Managers decide, HR sees it all</h3>
+          <p>Requests reach the right manager instantly. Balances, attendance and approvals stay up to date on their own.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Security -->
+  <section id="security" class="wrap section security" aria-labelledby="security-title">
+    <div class="security-intro">
+      <h2 id="security-title" class="section-title">Your people's data, handled with care.</h2>
+      <p>Employee records include personal and payroll details, so Workvaro is built to share only what each role needs.</p>
+    </div>
+    <dl class="security-list">
+      <div>
+        <dt><wv-icon name="lock" [size]="22" /> Two-step sign-in</dt>
+        <dd>Strong password rules, two-step verification for HR and admins, and accounts that lock after repeated wrong passwords.</dd>
+      </div>
+      <div>
+        <dt><wv-icon name="people" [size]="22" /> Access by role</dt>
+        <dd>Employees see their own records, managers see their direct reports, HR sees the company. Every request is checked on the server.</dd>
+      </div>
+      <div>
+        <dt><wv-icon name="shield" [size]="22" /> Encrypted bank details</dt>
+        <dd>Bank account numbers are stored encrypted, and shown in full only to HR and the employee.</dd>
+      </div>
+      <div>
+        <dt><wv-icon name="tools" [size]="22" /> Every change recorded</dt>
+        <dd>Profile edits, status changes and approvals are logged with who did what and when.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="wrap section" aria-labelledby="pricing-title">
+    <h2 id="pricing-title" class="section-title">Simple pricing per employee.</h2>
+    <p class="section-lead">Pay for the people you have, monthly. Every plan includes setup help.</p>
+    <div class="plans">
+      @for (p of plans; track p.name) {
+        <article class="plan" [class.highlight]="p.highlighted">
+          @if (p.highlighted) {
+            <span class="tag">Most companies pick this</span>
+          }
+          <h3>{{ p.name }}</h3>
+          <p class="audience">{{ p.audience }}</p>
+          <div class="price">
+            @if (p.pricePerEmployee !== null) {
+              <b>{{ price(p.pricePerEmployee) }}</b><span>per employee per month</span>
+            } @else {
+              <b>Let's talk</b><span>priced for your setup</span>
+            }
+          </div>
+          <ul>
+            @for (f of p.features; track f) {
+              <li>{{ f }}</li>
+            }
+          </ul>
+          <button mat-flat-button type="button" [class.secondary]="!p.highlighted" (click)="tryDemo()">Try the live demo</button>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="wrap section faq" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="section-title">Questions people ask.</h2>
+    <div class="faq-list">
+      @for (f of faqs; track f.q) {
+        <details>
+          <summary>{{ f.q }}<wv-icon name="plus" [size]="18" /></summary>
+          <p>{{ f.a }}</p>
+        </details>
+      }
+    </div>
+  </section>
+
+  <!-- Final call to action -->
+  <section class="wrap closing" aria-labelledby="closing-title">
+    <div class="closing-inner">
+      <h2 id="closing-title">See your team's week in Workvaro.</h2>
+      <p>Open the demo as an employee, a manager or HR, and try the whole flow in two minutes.</p>
+      <button mat-flat-button type="button" class="big" (click)="tryDemo()">Try the live demo</button>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <wv-logo [size]="24" />
+    <nav aria-label="Footer">
+      <a href="#features">Features</a>
+      <a href="#security">Security</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <span class="copy">© {{ year }} Workvaro</span>
+  </div>
+</footer>
