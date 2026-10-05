@@ -6,6 +6,7 @@ The Angular frontend comes on Day 2 (`frontend/`). Plans: [EMS-Project-Plan.md](
 ## Layout
 
 ```
+frontend/                   Angular 22 web app (Workvaro), see frontend/README.md
 pom.xml                     parent POM (modules below), Maven Wrapper: mvnw / mvnw.cmd
 common-lib/                 shared: JWT resource-server security, Keycloak role converter, CurrentUser,
                             GlobalExceptionHandler + ApiError, PageResponse, AES-GCM field encryption
@@ -48,6 +49,7 @@ docker compose -f infra/docker-compose.yml up -d
 | http://localhost:8081/swagger-ui.html | employee-service Swagger UI |
 | http://localhost:8082/swagger-ui.html | leave-attendance-service Swagger UI |
 | http://localhost:8080/api/... | everything, through the gateway |
+| http://localhost:4200 | Workvaro web app (`cd frontend; npm install; npm start`), see [frontend/README.md](frontend/README.md) |
 
 ## Seed users (DEV ONLY)
 

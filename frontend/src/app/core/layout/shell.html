@@ -1,0 +1,80 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav
+    class="side"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile() || menuOpen()"
+    [fixedInViewport]="isMobile()"
+    (closedStart)="menuOpen.set(false)"
+  >
+    <div class="side-inner">
+      <a class="brand" routerLink="/app/dashboard" (click)="closeOnMobile()">
+        <wv-logo />
+      </a>
+
+      <nav aria-label="Main">
+        @for (item of nav(); track item.path) {
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            (click)="closeOnMobile()"
+          >
+            <wv-icon [name]="item.icon" />
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </nav>
+
+      <div class="foot">
+        <div class="theme" role="group" aria-label="Colour theme">
+          <button type="button" [attr.aria-pressed]="theme.mode() === 'light'" (click)="theme.set('light')">
+            <wv-icon name="sun" [size]="16" /> Light
+          </button>
+          <button type="button" [attr.aria-pressed]="theme.mode() === 'dark'" (click)="theme.set('dark')">
+            <wv-icon name="moon" [size]="16" /> Dark
+          </button>
+        </div>
+
+        @if (auth.user(); as user) {
+          <button type="button" class="me" [matMenuTriggerFor]="userMenu" aria-label="Account menu">
+            <wv-avatar [name]="user.name" [size]="36" />
+            <span class="me-text">
+              <span class="me-name">{{ user.name }}</span>
+              <span class="me-role">{{ roleLabel() }}</span>
+            </span>
+            <wv-icon name="chevronDown" [size]="16" />
+          </button>
+        }
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main">
+    @if (isMobile()) {
+      <header class="mobile-bar">
+        <button mat-icon-button type="button" aria-label="Open menu" (click)="menuOpen.set(true)">
+          <wv-icon name="menu" [size]="22" />
+        </button>
+        <wv-logo [size]="24" />
+      </header>
+    }
+    <main class="content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<mat-menu #userMenu="matMenu" xPosition="after" yPosition="above">
+  @if (auth.user(); as user) {
+    <div class="menu-head">
+      <strong>{{ user.name }}</strong>
+      <span>{{ user.email }}</span>
+    </div>
+  }
+  <button mat-menu-item type="button" (click)="auth.manageAccount()">
+    <wv-icon name="shield" /> <span>Password and sign-in security</span>
+  </button>
+  <button mat-menu-item type="button" (click)="auth.logout()">
+    <wv-icon name="logout" /> <span>Sign out</span>
+  </button>
+</mat-menu>

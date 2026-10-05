@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workvaro dashboard mock-up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest: #16402F; --forest-2: #1E5640; --forest-ink: #E6F2EA; --forest-muted: #9DBDAA;
+  --canvas: #F4F7F3; --surface: #FFFFFF; --sunk: #EEF3EF;
+  --ink: #13261D; --muted: #5E7268; --line: #DCE5DE;
+  --leaf: #3DBE7A; --leaf-ink: #0F3B25; --leaf-soft: #DDF3E6; --leaf-text: #1C7A4B;
+  --gold: #F2B544; --gold-soft: #FBEFCF; --gold-text: #8A5A00;
+  --alert: #D64545; --alert-soft: #FBE3E3; --alert-text: #9E2424;
+  --idle-soft: #ECEFED; --idle-text: #5E7268;
+  --shadow: 0 1px 2px rgba(19, 38, 29, .05), 0 8px 24px -12px rgba(19, 38, 29, .12);
+  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --text: "Hanken Grotesk", system-ui, sans-serif;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --forest: #11291F; --forest-2: #1A3A2C; --forest-ink: #E4EEE7; --forest-muted: #8FAA9A;
+  --canvas: #0E1A14; --surface: #14251D; --sunk: #102019;
+  --ink: #E4EEE7; --muted: #92A79B; --line: #25392F;
+  --leaf: #52D18E; --leaf-ink: #06281A; --leaf-soft: #173F2B; --leaf-text: #7FE0AD;
+  --gold: #F5C566; --gold-soft: #3A2F12; --gold-text: #F5C566;
+  --alert: #EF6B6B; --alert-soft: #3B1A1A; --alert-text: #F59A9A;
+  --idle-soft: #1B2D24; --idle-text: #92A79B;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--text); font-size: 15px; line-height: 1.5; color: var(--ink); background: var(--canvas); font-feature-settings: "tnum" 1; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+
+.app { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+
+/* sidebar */
+.side { background: var(--forest); color: var(--forest-ink); padding: 22px 14px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; height: 100vh; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 10px; font-family: var(--display); font-weight: 700; font-size: 21px; letter-spacing: -.02em; }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; color: var(--forest-muted); text-decoration: none; font-weight: 500; }
+.nav a:hover { color: var(--forest-ink); background: rgba(255,255,255,.06); }
+.nav a[aria-current="page"] { color: var(--forest-ink); background: var(--forest-2); }
+.nav a[aria-current="page"] svg { color: var(--leaf); }
+.nav .count { margin-left: auto; background: var(--gold); color: #3A2800; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 99px; }
+.nav svg { width: 18px; height: 18px; flex: none; }
+.side-foot { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
+.theme { display: flex; background: rgba(0,0,0,.2); border-radius: 10px; padding: 3px; }
+.theme button { flex: 1; border: 0; background: transparent; color: var(--forest-muted); padding: 6px; border-radius: 8px; font-size: 13px; }
+.theme button[aria-pressed="true"] { background: var(--forest-2); color: var(--forest-ink); }
+.me { display: flex; align-items: center; gap: 10px; padding: 8px 10px; }
+.me small { display: block; color: var(--forest-muted); font-size: 12px; }
+
+/* main */
+.main { padding: 26px 32px 40px; max-width: 1320px; width: 100%; }
+.top { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 24px; }
+.top h1 { font-family: var(--display); font-weight: 600; font-size: 30px; letter-spacing: -.025em; margin: 0; line-height: 1.1; }
+.top p { margin: 4px 0 0; color: var(--muted); }
+.top .tools { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+.search { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; width: 260px; color: var(--muted); }
+.icon-btn { width: 40px; height: 40px; display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+.card h2 { font-family: var(--display); font-weight: 600; font-size: 17px; letter-spacing: -.01em; margin: 0; }
+.card-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.card-head .link { margin-left: auto; color: var(--leaf-text); font-weight: 500; font-size: 14px; text-decoration: none; }
+.sub { color: var(--muted); font-size: 13px; }
+
+/* my day (the one bold card) */
+.day { grid-column: span 5; background: var(--forest); color: var(--forest-ink); border: 0; position: relative; overflow: hidden; }
+.day .sub { color: var(--forest-muted); }
+.day-time { font-family: var(--display); font-weight: 600; font-size: 64px; letter-spacing: -.04em; line-height: 1; margin: 18px 0 6px; }
+.day-time small { font-size: 22px; letter-spacing: 0; color: var(--forest-muted); margin-left: 6px; }
+.day-row { display: flex; align-items: center; gap: 14px; margin-top: 22px; }
+.btn { border: 0; border-radius: 10px; padding: 10px 16px; font-weight: 600; }
+.btn-leaf { background: var(--leaf); color: var(--leaf-ink); }
+.btn-ghost { background: transparent; border: 1px solid var(--line); }
+.day .btn-ghost { border-color: rgba(255,255,255,.18); color: var(--forest-ink); }
+.arc { position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; opacity: .9; }
+
+/* balances */
+.bal { grid-column: span 4; }
+.rings { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ring { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.ring svg { width: 76px; height: 76px; }
+.ring b { font-family: var(--display); font-size: 20px; font-weight: 600; }
+.ring span { font-size: 13px; color: var(--muted); }
+.bal-foot { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 14px; }
+
+/* holiday */
+.hol { grid-column: span 3; display: flex; flex-direction: column; }
+.hol-date { display: flex; gap: 14px; align-items: center; margin: 4px 0 14px; }
+.cal-chip { width: 56px; border-radius: 12px; overflow: hidden; text-align: center; border: 1px solid var(--line); }
+.cal-chip i { display: block; font-style: normal; background: var(--gold); color: #3A2800; font-size: 12px; font-weight: 600; padding: 2px 0; }
+.cal-chip b { display: block; font-family: var(--display); font-size: 24px; padding: 4px 0 6px; }
+.hol ul { list-style: none; margin: auto 0 0; padding: 12px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.hol li { display: flex; justify-content: space-between; }
+.hol li span:last-child { color: var(--muted); }
+
+/* team today */
+.team { grid-column: span 7; }
+.tally { display: flex; gap: 8px; margin-left: auto; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.ok { background: var(--leaf-soft); color: var(--leaf-text); }
+.wait { background: var(--gold-soft); color: var(--gold-text); }
+.no { background: var(--alert-soft); color: var(--alert-text); }
+.idle { background: var(--idle-soft); color: var(--idle-text); }
+.people { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.person { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: var(--sunk); }
+.person .who { min-width: 0; }
+.person b { display: block; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.person small { color: var(--muted); font-size: 13px; }
+.av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 14px; flex: none; position: relative; }
+.av::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--sunk); background: var(--dot, transparent); }
+.a1 { background: #DDF3E6; color: #1C7A4B; } .a2 { background: #FBEFCF; color: #8A5A00; } .a3 { background: #E2E8F8; color: #2E4A9E; }
+.a4 { background: #F6E0EC; color: #8E2D62; } .a5 { background: #DFF0F2; color: #1D6670; } .a6 { background: #EDE6F7; color: #5B3A8C; }
+:root[data-theme="dark"] .av { filter: saturate(.8) brightness(.85); }
+
+/* approvals */
+.inbox { grid-column: span 5; }
+.req { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.req:first-of-type { border-top: 0; padding-top: 0; }
+.req b { font-weight: 600; font-size: 14px; }
+.req p { margin: 1px 0 0; font-size: 13px; color: var(--muted); }
+.req .acts { display: flex; gap: 6px; }
+.req .acts button { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; border: 1px solid var(--line); background: var(--surface); }
+.req .acts .yes { background: var(--leaf); border-color: var(--leaf); color: var(--leaf-ink); }
+.req.done { opacity: .55; }
+
+/* leave strip (signature) */
+.strip { grid-column: span 12; }
+.strip-grid { display: grid; grid-template-columns: 150px repeat(31, 1fr); row-gap: 8px; align-items: center; font-size: 12px; }
+.strip-grid .d { text-align: center; color: var(--muted); padding-bottom: 6px; }
+.strip-grid .d.we { opacity: .55; }
+.strip-grid .d.today { color: var(--ink); font-weight: 600; }
+.strip-grid .name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+.cell { height: 26px; border-left: 1px solid var(--line); position: relative; }
+.cell.we { background: repeating-linear-gradient(135deg, transparent 0 4px, var(--line) 4px 5px); }
+.cell.holiday { background: var(--gold-soft); }
+.bar { height: 22px; margin: 2px 2px; border-radius: 7px; display: flex; align-items: center; padding: 0 8px; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; }
+.bar.ok { background: var(--leaf); color: var(--leaf-ink); }
+.bar.wait { background: var(--gold-soft); color: var(--gold-text); border: 1px dashed var(--gold); }
+.bar::before { display: none; }
+.today-line { position: absolute; top: -34px; bottom: -4px; left: 50%; width: 2px; background: var(--ink); opacity: .25; }
+.legend { display: flex; gap: 16px; margin-left: auto; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+@media (max-width: 1100px) {
+  .day, .bal, .hol, .team, .inbox { grid-column: span 12; }
+  .people { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; }
+  .side { position: static; height: auto; flex-direction: row; align-items: center; padding: 12px 16px; overflow-x: auto; }
+  .nav { flex-direction: row; } .nav a span.label, .side-foot { display: none; }
+  .main { padding: 20px 16px; } .top { flex-wrap: wrap; } .search { display: none; }
+  .day-time { font-size: 48px; }
+  .people { grid-template-columns: 1fr; }
+  .strip { overflow-x: auto; } .strip-grid { min-width: 820px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .req { transition: opacity .25s; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#3DBE7A"/><path d="M7 9l3.2 10L14 11l3.8 8L21 9" fill="none" stroke="#0F3B25" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Workvaro
+    </div>
+    <nav class="nav" aria-label="Main">
+      <a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span class="label">Dashboard</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14.8c2 .7 3.2 2.5 3.6 5.2"/></svg><span class="label">People</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="label">Leave</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="label">Attendance</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12l4 4L19 6"/></svg><span class="label">Approvals</span><span class="count">3</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg><span class="label">Holidays</span></a>
+    </nav>
+    <div class="side-foot">
+      <div class="theme" role="group" aria-label="Colour theme">
+        <button type="button" data-set="light" aria-pressed="true">Light</button>
+        <button type="button" data-set="dark" aria-pressed="false">Dark</button>
+      </div>
+      <div class="me">
+        <span class="av a3" style="--dot: transparent">MK</span>
+        <div>Manoj Kumar<small>Engineering manager</small></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div>
+        <h1>Good morning, Manoj</h1>
+        <p>Monday, 5 October. Three requests are waiting for you.</p>
+      </div>
+      <div class="tools">
+        <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search people</label>
+        <button class="icon-btn" aria-label="Notifications"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 16V11a6 6 0 1112 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg></button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card day" aria-label="My day">
+        <svg class="arc" viewBox="0 0 220 220" aria-hidden="true"><circle cx="110" cy="110" r="90" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="18"/><circle cx="110" cy="110" r="90" fill="none" stroke="#3DBE7A" stroke-width="18" stroke-linecap="round" stroke-dasharray="565" stroke-dashoffset="410" transform="rotate(-90 110 110)" opacity=".85"/></svg>
+        <h2>My day</h2>
+        <div class="sub">Checked in at 09:12</div>
+        <div class="day-time">2:14<small>hours so far</small></div>
+        <div class="sub">Standard day is 9 hours. Check out when you leave.</div>
+        <div class="day-row">
+          <button class="btn btn-leaf" type="button">Check out</button>
+          <button class="btn btn-ghost" type="button">Request a correction</button>
+        </div>
+      </section>
+
+      <section class="card bal" aria-label="Leave balance">
+        <div class="card-head"><h2>Leave balance</h2><span class="sub">2026</span><a class="link" href="#">Apply for leave</a></div>
+        <div class="rings">
+          <div class="ring"><svg viewBox="0 0 76 76"><circle cx="38" cy="38" r="31" fill="none" stroke="var(--sunk)" stroke-width="8"/><circle cx="38" cy="38" r="31" fill="none" stroke="var(--leaf)" stroke-width="8" stroke-linecap="round" stroke-dasharray="194.8" stroke-dashoffset="64.9" transform="rotate(-90 38 38)"/></svg><b>8 of 12</b><span>Casual</span></div>
+          <div class="ring"><svg viewBox="0 0 76 76"><circle cx="38" cy="38" r="31" fill="none" stroke="var(--sunk)" stroke-width="8"/><circle cx="38" cy="38" r="31" fill="none" stroke="var(--leaf)" stroke-width="8" stroke-linecap="round" stroke-dasharray="194.8" stroke-dashoffset="48.7" transform="rotate(-90 38 38)"/></svg><b>6 of 8</b><span>Sick</span></div>
+          <div class="ring"><svg viewBox="0 0 76 76"><circle cx="38" cy="38" r="31" fill="none" stroke="var(--sunk)" stroke-width="8"/><circle cx="38" cy="38" r="31" fill="none" stroke="var(--leaf)" stroke-width="8" stroke-linecap="round" stroke-dasharray="194.8" stroke-dashoffset="13" transform="rotate(-90 38 38)"/></svg><b>14 of 15</b><span>Earned</span></div>
+        </div>
+        <div class="bal-foot"><span>1 day pending approval</span><span class="sub">Unpaid used: 0</span></div>
+      </section>
+
+      <section class="card hol" aria-label="Next holiday">
+        <div class="card-head"><h2>Next holiday</h2></div>
+        <div class="hol-date">
+          <div class="cal-chip"><i>Oct</i><b>20</b></div>
+          <div><b>Dussehra</b><div class="sub">Tuesday, in 15 days</div></div>
+        </div>
+        <ul>
+          <li><span>Diwali</span><span>8 Nov</span></li>
+          <li><span>Christmas</span><span>25 Dec</span></li>
+        </ul>
+      </section>
+
+      <section class="card team" aria-label="Team today">
+        <div class="card-head">
+          <h2>Team today</h2>
+          <div class="tally"><span class="chip ok">4 in</span><span class="chip wait">1 on leave</span><span class="chip idle">1 not in</span></div>
+        </div>
+        <div class="people">
+          <div class="person"><span class="av a1" style="--dot: var(--leaf)">EP</span><div class="who"><b>Esha Patel</b><small>In since 09:04</small></div></div>
+          <div class="person"><span class="av a2" style="--dot: var(--leaf)">RM</span><div class="who"><b>Rohan Mehta</b><small>In since 08:51</small></div></div>
+          <div class="person"><span class="av a4" style="--dot: var(--gold)">KI</span><div class="who"><b>Kavya Iyer</b><small>Casual leave today</small></div></div>
+          <div class="person"><span class="av a5" style="--dot: var(--leaf)">AN</span><div class="who"><b>Arjun Nair</b><small>In since 09:30</small></div></div>
+          <div class="person"><span class="av a6" style="--dot: var(--leaf)">SK</span><div class="who"><b>Sneha Kulkarni</b><small>In since 10:02</small></div></div>
+          <div class="person"><span class="av a3" style="--dot: transparent">IS</span><div class="who"><b>Imran Shaikh</b><small>Not checked in</small></div></div>
+        </div>
+      </section>
+
+      <section class="card inbox" aria-label="Waiting for your approval">
+        <div class="card-head"><h2>Waiting for you</h2><a class="link" href="#">See all</a></div>
+        <div class="req">
+          <span class="av a2" style="--dot: transparent">RM</span>
+          <div><b>Rohan Mehta, casual leave</b><p>12 to 13 Oct, 2 days. Family function.</p></div>
+          <div class="acts"><button class="no-btn" aria-label="Reject"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button class="yes" aria-label="Approve"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l4 4L19 6"/></svg></button></div>
+        </div>
+        <div class="req">
+          <span class="av a1" style="--dot: transparent">EP</span>
+          <div><b>Esha Patel, attendance fix</b><p>Fri 2 Oct, 09:30 to 18:00. Forgot to check in.</p></div>
+          <div class="acts"><button aria-label="Reject"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button class="yes" aria-label="Approve"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l4 4L19 6"/></svg></button></div>
+        </div>
+        <div class="req">
+          <span class="av a5" style="--dot: transparent">AN</span>
+          <div><b>Arjun Nair, sick leave</b><p>Wed 7 Oct, 1 day.</p></div>
+          <div class="acts"><button aria-label="Reject"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button class="yes" aria-label="Approve"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l4 4L19 6"/></svg></button></div>
+        </div>
+      </section>
+
+      <section class="card strip" aria-label="Team leave in October">
+        <div class="card-head">
+          <h2>Who's away in October</h2>
+          <div class="legend"><span><i class="sw" style="background: var(--leaf)"></i>Approved</span><span><i class="sw" style="background: var(--gold-soft); border: 1px dashed var(--gold)"></i>Pending</span><span><i class="sw" style="background: var(--gold-soft)"></i>Holiday</span></div>
+        </div>
+        <div class="strip-grid" id="strip"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var buttons = document.querySelectorAll('.theme button');
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === t)); });
+  }
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+  buttons.forEach(function (b) { b.addEventListener('click', function () { setTheme(b.dataset.set); }); });
+
+  document.querySelectorAll('.req .acts button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var req = b.closest('.req');
+      var approved = b.classList.contains('yes');
+      req.classList.add('done');
+      req.querySelector('.acts').innerHTML = '<span class="chip ' + (approved ? 'ok' : 'no') + '">' + (approved ? 'Approved' : 'Rejected') + '</span>';
+    });
+  });
+
+  var holidays = { 2: 'Gandhi Jayanti', 20: 'Dussehra' };
+  var people = [
+    ['Esha Patel', []],
+    ['Rohan Mehta', [[12, 13, 'wait', 'CL pending']]],
+    ['Kavya Iyer', [[5, 6, 'ok', 'Casual']]],
+    ['Arjun Nair', [[7, 7, 'wait', 'SL']]],
+    ['Sneha Kulkarni', [[21, 23, 'ok', 'Earned']]],
+    ['Imran Shaikh', [[26, 30, 'ok', 'Earned leave']]]
+  ];
+  var strip = document.getElementById('strip');
+  var html = '<div></div>';
+  for (var d = 1; d <= 31; d++) {
+    var dow = new Date(2026, 9, d).getDay();
+    html += '<div class="d' + (dow === 0 || dow === 6 ? ' we' : '') + (d === 5 ? ' today' : '') + '">' + d + '</div>';
+  }
+  people.forEach(function (p) {
+    html += '<div class="name">' + p[0] + '</div>';
+    var d = 1;
+    while (d <= 31) {
+      var leave = p[1].filter(function (l) { return l[0] === d; })[0];
+      if (leave) {
+        var span = leave[1] - leave[0] + 1;
+        html += '<div style="grid-column: span ' + span + '"><div class="bar ' + leave[2] + '" title="' + leave[3] + '">' + leave[3] + '</div></div>';
+        d += span;
+        continue;
+      }
+      var dow = new Date(2026, 9, d).getDay();
+      var cls = 'cell' + (dow === 0 || dow === 6 ? ' we' : '') + (holidays[d] ? ' holiday' : '');
+      html += '<div class="' + cls + '"' + (holidays[d] ? ' title="' + holidays[d] + '"' : '') + '></div>';
+      d++;
+    }
+  });
+  strip.innerHTML = html;
+})();
+</script>
+</body>
+</html>

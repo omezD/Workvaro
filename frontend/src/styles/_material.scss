@@ -1,0 +1,54 @@
+// Angular Material (M3) restyled to the Workvaro tokens.
+@use '@angular/material' as mat;
+@use './theme-colors' as colors;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: colors.$primary-palette,
+      tertiary: colors.$tertiary-palette,
+      // follows the CSS color-scheme set by _tokens.scss, so one theme serves light and dark
+      theme-type: color-scheme,
+    ),
+    typography: (
+      plain-family: var(--wv-font-text),
+      brand-family: var(--wv-font-display),
+    ),
+    density: 0,
+  ));
+
+  // Surfaces and outlines come from our tokens so Material parts (dialogs, menus, fields)
+  // sit on exactly the same colours as our own cards.
+  @include mat.theme-overrides((
+    background: var(--wv-canvas),
+    surface: var(--wv-surface),
+    surface-container-lowest: var(--wv-surface),
+    surface-container-low: var(--wv-surface),
+    surface-container: var(--wv-surface),
+    surface-container-high: var(--wv-surface),
+    surface-container-highest: var(--wv-sunk),
+    on-surface: var(--wv-ink),
+    on-surface-variant: var(--wv-muted),
+    outline: var(--wv-line-strong),
+    outline-variant: var(--wv-line),
+    corner-small: 8px,
+    corner-medium: var(--wv-radius-control),
+    corner-large: var(--wv-radius-card),
+    corner-extra-large: 20px,
+  ));
+
+  // Primary buttons: leaf fill with dark ink text (better contrast than white on leaf)
+  @include mat.button-overrides((
+    filled-container-color: var(--wv-leaf),
+    filled-label-text-color: var(--wv-leaf-ink),
+    filled-container-shape: var(--wv-radius-control),
+    filled-label-text-weight: 600,
+    outlined-container-shape: var(--wv-radius-control),
+    outlined-label-text-color: var(--wv-ink),
+    outlined-label-text-weight: 600,
+    text-container-shape: var(--wv-radius-control),
+    text-label-text-color: var(--wv-leaf-text),
+    text-label-text-weight: 600,
+    tonal-container-shape: var(--wv-radius-control),
+  ));
+}

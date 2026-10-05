@@ -1,0 +1,88 @@
+// Workvaro design tokens ("Evergreen"). Every colour in the app comes from here.
+// Light is the default; [data-theme='dark'] on <html> switches (see ThemeService).
+
+:root {
+  --wv-forest: #16402f;
+  --wv-forest-2: #1e5640;
+  --wv-forest-ink: #e6f2ea;
+  --wv-forest-muted: #9dbdaa;
+
+  --wv-canvas: #f4f7f3;
+  --wv-surface: #ffffff;
+  --wv-sunk: #eef3ef;
+  --wv-ink: #13261d;
+  --wv-muted: #5e7268;
+  --wv-line: #dce5de;
+  --wv-line-strong: #c3d1c7;
+
+  --wv-leaf: #3dbe7a;
+  --wv-leaf-ink: #0f3b25;
+  --wv-leaf-soft: #ddf3e6;
+  --wv-leaf-text: #1c7a4b;
+
+  --wv-gold: #f2b544;
+  --wv-gold-ink: #3a2800;
+  --wv-gold-soft: #fbefcf;
+  --wv-gold-text: #8a5a00;
+
+  --wv-alert: #d64545;
+  --wv-alert-soft: #fbe3e3;
+  --wv-alert-text: #9e2424;
+
+  --wv-idle-soft: #eceeed;
+  --wv-idle-text: #5e7268;
+
+  --wv-shadow: 0 1px 2px rgb(19 38 29 / 5%), 0 8px 24px -12px rgb(19 38 29 / 12%);
+  --wv-radius-card: 16px;
+  --wv-radius-control: 10px;
+
+  --wv-font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --wv-font-text: 'Hanken Grotesk Variable', system-ui, sans-serif;
+
+  // Type scale (1.25 ratio from a 15px base)
+  --wv-text-sm: 13px;
+  --wv-text-base: 15px;
+  --wv-text-lg: 17px;
+  --wv-text-xl: 21px;
+  --wv-text-2xl: 26px;
+  --wv-text-3xl: 32px;
+  --wv-text-display: 56px;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --wv-forest: #11291f;
+  --wv-forest-2: #1a3a2c;
+  --wv-forest-ink: #e4eee7;
+  --wv-forest-muted: #8faa9a;
+
+  --wv-canvas: #0e1a14;
+  --wv-surface: #14251d;
+  --wv-sunk: #102019;
+  --wv-ink: #e4eee7;
+  --wv-muted: #92a79b;
+  --wv-line: #25392f;
+  --wv-line-strong: #34503f;
+
+  --wv-leaf: #52d18e;
+  --wv-leaf-ink: #06281a;
+  --wv-leaf-soft: #173f2b;
+  --wv-leaf-text: #7fe0ad;
+
+  --wv-gold: #f5c566;
+  --wv-gold-ink: #2b1d00;
+  --wv-gold-soft: #3a2f12;
+  --wv-gold-text: #f5c566;
+
+  --wv-alert: #ef6b6b;
+  --wv-alert-soft: #3b1a1a;
+  --wv-alert-text: #f59a9a;
+
+  --wv-idle-soft: #1b2d24;
+  --wv-idle-text: #92a79b;
+
+  --wv-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+
+  color-scheme: dark;
+}
