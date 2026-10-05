@@ -1,0 +1,36 @@
+meta {
+  name: HR adds a holiday
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{gatewayUrl}}/api/holidays
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "date": "{{holidayDate}}",
+    "name": "API test holiday"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  // Two years ahead, so it never affects the leave-flow dates.
+  const d = new Date(Date.UTC(new Date().getFullYear() + 2, 0, 1 + Math.floor(Math.random() * 360)));
+  bru.setVar("holidayDate", d.toISOString().slice(0, 10));
+}
+
+script:post-response {
+  bru.setVar("holidayId", res.body.id);
+}

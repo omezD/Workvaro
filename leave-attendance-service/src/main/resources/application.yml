@@ -1,0 +1,84 @@
+server:
+  port: ${LEAVE_SERVICE_PORT:8082}
+  error:
+    include-message: never
+    include-stacktrace: never
+
+spring:
+  application:
+    name: leave-attendance-service
+  profiles:
+    default: dev
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${LEAVE_DB_NAME:leave_db}
+    username: ${DB_USER:ems}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/ems}
+  data:
+    web:
+      pageable:
+        max-page-size: 100
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 3000
+            read-timeout: 5000
+            logger-level: basic
+    circuitbreaker:
+      bulkhead:
+        resilience4j:
+          enabled: false
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        # A missing/forbidden employee is a business answer, not an outage
+        ignore-exceptions:
+          - feign.FeignException$NotFound
+          - feign.FeignException$Forbidden
+          - feign.FeignException$Unauthorized
+          - feign.FeignException$BadRequest
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 6s
+
+ems:
+  # Business time zone: decides what "today" is for check-in/out and leave rules
+  zone-id: ${EMS_ZONE_ID:Asia/Kolkata}
+  services:
+    employee-url: ${EMPLOYEE_SERVICE_URL:http://localhost:8081}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

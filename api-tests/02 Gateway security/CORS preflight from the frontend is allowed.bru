@@ -1,0 +1,27 @@
+meta {
+  name: CORS preflight from the frontend is allowed
+  type: http
+  seq: 5
+}
+
+options {
+  url: {{gatewayUrl}}/api/employees
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: http://localhost:4200
+  Access-Control-Request-Method: GET
+  Access-Control-Request-Headers: authorization
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("echoes the allowed origin", function() {
+    expect(res.getHeader("access-control-allow-origin")).to.equal("http://localhost:4200");
+  });
+}

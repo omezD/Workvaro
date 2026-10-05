@@ -1,0 +1,42 @@
+server:
+  port: ${GATEWAY_PORT:8080}
+
+spring:
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/ems}
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: employee-service
+              uri: ${EMPLOYEE_SERVICE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/employees/**,/api/departments/**,/api/designations/**
+            - id: leave-attendance-service
+              uri: ${LEAVE_SERVICE_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/leaves/**,/api/leave-types/**,/api/holidays/**,/api/attendance/**,/api/dashboard/**
+          httpclient:
+            connect-timeout: 3000
+            response-timeout: 15s
+
+ems:
+  gateway:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+    requests-per-minute: ${RATE_LIMIT_PER_MINUTE:120}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

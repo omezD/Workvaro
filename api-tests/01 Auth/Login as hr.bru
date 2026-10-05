@@ -1,0 +1,34 @@
+meta {
+  name: Login as hr
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{keycloakUrl}}/realms/ems/protocol/openid-connect/token
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  client_id: ems-api-test
+  grant_type: password
+  username: hr
+  password: {{hrPassword}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+script:post-response {
+  bru.setVar("hrToken", res.body.access_token);
+}
+
+tests {
+  test("returns an access token with the realm roles", function() {
+    expect(res.body.access_token).to.be.a("string");
+    const payload = JSON.parse(Buffer.from(res.body.access_token.split(".")[1], "base64").toString());
+    expect(payload.realm_access.roles).to.include("HR");
+  });
+}

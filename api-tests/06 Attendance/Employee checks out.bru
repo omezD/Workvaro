@@ -1,0 +1,21 @@
+meta {
+  name: Employee checks out
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{gatewayUrl}}/api/attendance/check-out
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+tests {
+  test("status is one of 200, 409", function() {
+    expect([200, 409]).to.include(res.getStatus());
+  });
+}

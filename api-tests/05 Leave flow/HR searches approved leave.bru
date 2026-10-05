@@ -1,0 +1,25 @@
+meta {
+  name: HR searches approved leave
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{gatewayUrl}}/api/leaves?status=APPROVED&from={{leaveDate}}&to={{leaveDate}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("finds the approved request", function() {
+    expect(res.body.content.map(function(r) { return r.id; })).to.include(bru.getVar("leaveId"));
+  });
+}

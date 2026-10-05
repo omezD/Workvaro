@@ -1,0 +1,25 @@
+meta {
+  name: Directory search
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees?search=esha
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("finds Esha", function() {
+    expect(res.body.content.map(function(e) { return e.email; })).to.include("employee@ems.local");
+  });
+}

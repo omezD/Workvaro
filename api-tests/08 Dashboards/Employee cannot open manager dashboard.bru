@@ -1,0 +1,19 @@
+meta {
+  name: Employee cannot open manager dashboard
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{gatewayUrl}}/api/dashboard/manager
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 403
+}

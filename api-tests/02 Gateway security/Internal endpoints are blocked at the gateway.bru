@@ -1,0 +1,19 @@
+meta {
+  name: Internal endpoints are blocked at the gateway
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{gatewayUrl}}/internal/employees/active
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 403
+}

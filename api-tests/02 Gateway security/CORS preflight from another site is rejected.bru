@@ -1,0 +1,20 @@
+meta {
+  name: CORS preflight from another site is rejected
+  type: http
+  seq: 6
+}
+
+options {
+  url: {{gatewayUrl}}/api/employees
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: https://evil.example
+  Access-Control-Request-Method: GET
+}
+
+assert {
+  res.status: eq 403
+}

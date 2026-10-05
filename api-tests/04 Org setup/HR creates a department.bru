@@ -1,0 +1,35 @@
+meta {
+  name: HR creates a department
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{gatewayUrl}}/api/departments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "code": "{{deptCode}}",
+    "name": "Dept {{deptCode}}",
+    "description": "Created by the API tests"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  bru.setVar("deptCode", "D" + Date.now().toString().slice(-6));
+}
+
+script:post-response {
+  bru.setVar("deptId", res.body.id);
+}

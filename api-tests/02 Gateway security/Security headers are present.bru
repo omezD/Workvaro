@@ -1,0 +1,27 @@
+meta {
+  name: Security headers are present
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("sets nosniff, frame and CSP headers", function() {
+    expect(res.getHeader("x-content-type-options")).to.equal("nosniff");
+    expect(res.getHeader("x-frame-options")).to.equal("DENY");
+    expect(res.getHeader("content-security-policy")).to.contain("default-src 'none'");
+  });
+}

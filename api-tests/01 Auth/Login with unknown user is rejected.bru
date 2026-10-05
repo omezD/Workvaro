@@ -1,0 +1,22 @@
+meta {
+  name: Login with unknown user is rejected
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{keycloakUrl}}/realms/ems/protocol/openid-connect/token
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  client_id: ems-api-test
+  grant_type: password
+  username: nobody
+  password: Wrong@Pass1
+}
+
+assert {
+  res.status: eq 401
+}

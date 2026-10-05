@@ -1,0 +1,19 @@
+meta {
+  name: HR cannot approve own leave
+  type: http
+  seq: 18
+}
+
+patch {
+  url: {{gatewayUrl}}/api/leaves/{{hrLeaveId}}/approve
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+assert {
+  res.status: eq 403
+}

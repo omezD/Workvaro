@@ -1,0 +1,25 @@
+meta {
+  name: Manager approves the correction
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{gatewayUrl}}/api/attendance/corrections/{{correctionId}}/approve
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("is approved", function() {
+    expect(res.body.status).to.equal("APPROVED");
+  });
+}

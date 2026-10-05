@@ -1,0 +1,19 @@
+meta {
+  name: Employee cannot see the team calendar
+  type: http
+  seq: 22
+}
+
+get {
+  url: {{gatewayUrl}}/api/leaves/team-calendar
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 403
+}

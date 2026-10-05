@@ -1,0 +1,19 @@
+meta {
+  name: Employee cannot see today's board
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{gatewayUrl}}/api/attendance/today
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 403
+}

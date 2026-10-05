@@ -1,0 +1,27 @@
+meta {
+  name: End before start is 400
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{gatewayUrl}}/api/leaves
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "leaveTypeId": {{clTypeId}},
+    "startDate": "{{leaveYear}}-03-10",
+    "endDate": "{{leaveYear}}-03-09"
+  }
+}
+
+assert {
+  res.status: eq 400
+}

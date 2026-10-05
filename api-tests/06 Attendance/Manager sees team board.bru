@@ -1,0 +1,25 @@
+meta {
+  name: Manager sees team board
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{gatewayUrl}}/api/attendance/today
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("includes the employee", function() {
+    expect(res.body.employees.map(function(e) { return e.employeeId; })).to.include(bru.getVar("employeeEmployeeId"));
+  });
+}

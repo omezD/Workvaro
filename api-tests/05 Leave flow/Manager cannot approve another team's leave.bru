@@ -1,0 +1,19 @@
+meta {
+  name: Manager cannot approve another team's leave
+  type: http
+  seq: 17
+}
+
+patch {
+  url: {{gatewayUrl}}/api/leaves/{{hrLeaveId}}/approve
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+assert {
+  res.status: eq 403
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Employee cancels pending request
+  type: http
+  seq: 15
+}
+
+patch {
+  url: {{gatewayUrl}}/api/leaves/{{unpaidLeaveId}}/cancel
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("is cancelled", function() {
+    expect(res.body.status).to.equal("CANCELLED");
+  });
+}

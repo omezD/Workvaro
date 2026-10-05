@@ -1,0 +1,54 @@
+meta {
+  name: Leave types
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{gatewayUrl}}/api/leave-types
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+script:pre-request {
+  // Pick dates next year so reruns don't hit the back-date rule and rarely overlap earlier runs.
+  const year = new Date().getFullYear() + 1;
+  function randomWeekday(exclude) {
+    for (;;) {
+      const d = new Date(Date.UTC(year, 0, 2 + Math.floor(Math.random() * 360)));
+      const iso = d.toISOString().slice(0, 10);
+      const dow = d.getUTCDay();
+      if (dow !== 0 && dow !== 6 && iso.startsWith(String(year)) && iso !== year + "-01-26" && exclude.indexOf(iso) < 0) {
+        return iso;
+      }
+    }
+  }
+  const d1 = randomWeekday([]);
+  const d2 = randomWeekday([d1]);
+  const d3 = randomWeekday([d1, d2]);
+  bru.setVar("leaveYear", year);
+  bru.setVar("leaveDate", d1);
+  bru.setVar("leaveMonth", d1.slice(0, 7));
+  bru.setVar("unpaidDate", d2);
+  bru.setVar("hrLeaveDate", d3);
+}
+
+script:post-response {
+  bru.setVar("clTypeId", res.body.find(function(t) { return t.code === "CL"; }).id);
+  bru.setVar("ulTypeId", res.body.find(function(t) { return t.code === "UL"; }).id);
+}
+
+tests {
+  test("has casual and unpaid leave", function() {
+    const codes = res.body.map(function(t) { return t.code; });
+    expect(codes).to.include.members(["CL", "SL", "EL", "UL"]);
+  });
+}

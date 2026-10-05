@@ -1,0 +1,19 @@
+meta {
+  name: Employee cannot approve own correction
+  type: http
+  seq: 9
+}
+
+patch {
+  url: {{gatewayUrl}}/api/attendance/corrections/{{correctionId}}/approve
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 403
+}

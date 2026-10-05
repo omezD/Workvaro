@@ -1,0 +1,26 @@
+meta {
+  name: Manager cannot create a designation
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{gatewayUrl}}/api/designations
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+body:json {
+  {
+    "title": "Chief Vibes Officer",
+    "level": 9
+  }
+}
+
+assert {
+  res.status: eq 403
+}

@@ -1,0 +1,31 @@
+meta {
+  name: Own profile update validates phone
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{gatewayUrl}}/api/employees/me
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "phone": "call me maybe"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+tests {
+  test("reports the phone field", function() {
+    expect(res.body.fieldErrors).to.have.property("phone");
+  });
+}

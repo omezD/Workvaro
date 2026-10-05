@@ -1,0 +1,26 @@
+meta {
+  name: Same date twice is 409
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{gatewayUrl}}/api/holidays
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "date": "{{holidayDate}}",
+    "name": "Duplicate"
+  }
+}
+
+assert {
+  res.status: eq 409
+}

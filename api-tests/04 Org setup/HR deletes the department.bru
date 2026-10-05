@@ -1,0 +1,19 @@
+meta {
+  name: HR deletes the department
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{gatewayUrl}}/api/departments/{{deptId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+assert {
+  res.status: eq 204
+}

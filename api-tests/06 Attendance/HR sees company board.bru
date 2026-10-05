@@ -1,0 +1,26 @@
+meta {
+  name: HR sees company board
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{gatewayUrl}}/api/attendance/today
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("counts add up", function() {
+    const b = res.body;
+    expect(b.present + b.onLeave + b.notCheckedIn).to.equal(b.employees.length);
+  });
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Balance is reduced
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{gatewayUrl}}/api/leaves/balance/me?year={{leaveYear}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("one casual day was deducted", function() {
+    const cl = res.body.find(function(b) { return b.leaveTypeCode === "CL"; });
+    expect(cl.used).to.equal(Number(bru.getVar("clUsedBefore")) + 1);
+    expect(cl.available).to.equal(Number(bru.getVar("clAvailableBefore")) - 1);
+  });
+}

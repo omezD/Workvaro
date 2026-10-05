@@ -1,0 +1,28 @@
+meta {
+  name: Correction with check-out before check-in is 400
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{gatewayUrl}}/api/attendance/corrections
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "workDate": "{{correctionDate}}",
+    "checkIn": "18:00",
+    "checkOut": "09:00",
+    "reason": "Backwards"
+  }
+}
+
+assert {
+  res.status: eq 400
+}

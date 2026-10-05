@@ -1,0 +1,26 @@
+meta {
+  name: Duplicate department is 409
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{gatewayUrl}}/api/departments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "code": "{{deptCode}}",
+    "name": "Another"
+  }
+}
+
+assert {
+  res.status: eq 409
+}

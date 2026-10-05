@@ -1,0 +1,19 @@
+meta {
+  name: Everyone can list designations
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{gatewayUrl}}/api/designations
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}

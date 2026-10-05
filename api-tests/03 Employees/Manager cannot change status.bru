@@ -1,0 +1,25 @@
+meta {
+  name: Manager cannot change status
+  type: http
+  seq: 19
+}
+
+patch {
+  url: {{gatewayUrl}}/api/employees/{{newEmployeeId}}/status
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+body:json {
+  {
+    "status": "TERMINATED"
+  }
+}
+
+assert {
+  res.status: eq 403
+}

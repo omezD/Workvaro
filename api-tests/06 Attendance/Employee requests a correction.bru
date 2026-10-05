@@ -1,0 +1,39 @@
+meta {
+  name: Employee requests a correction
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{gatewayUrl}}/api/attendance/corrections
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "workDate": "{{correctionDate}}",
+    "checkIn": "09:30",
+    "checkOut": "18:00",
+    "reason": "Forgot to check in (API test)"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  const d = new Date();
+  d.setDate(d.getDate() - (2 + Math.floor(Math.random() * 26)));
+  const pad = function(n) { return String(n).padStart(2, "0"); };
+  bru.setVar("correctionDate", d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()));
+}
+
+script:post-response {
+  bru.setVar("correctionId", res.body.id);
+}

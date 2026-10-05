@@ -1,0 +1,25 @@
+meta {
+  name: Employee monthly attendance
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{gatewayUrl}}/api/attendance/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("includes today", function() {
+    expect(res.body.length).to.be.greaterThan(0);
+  });
+}

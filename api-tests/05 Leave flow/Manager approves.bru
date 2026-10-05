@@ -1,0 +1,32 @@
+meta {
+  name: Manager approves
+  type: http
+  seq: 9
+}
+
+patch {
+  url: {{gatewayUrl}}/api/leaves/{{leaveId}}/approve
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+body:json {
+  {
+    "comment": "Approved by API test"
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("is approved by the manager", function() {
+    expect(res.body.status).to.equal("APPROVED");
+    expect(res.body.decisionComment).to.equal("Approved by API test");
+  });
+}

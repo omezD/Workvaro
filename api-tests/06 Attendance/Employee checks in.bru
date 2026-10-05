@@ -1,0 +1,25 @@
+meta {
+  name: Employee checks in
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{gatewayUrl}}/api/attendance/check-in
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+tests {
+  test("status is one of 201, 409", function() {
+    expect([201, 409]).to.include(res.getStatus());
+  });
+}
+
+docs {
+  409 means this employee already checked in today (e.g. on a rerun).
+}

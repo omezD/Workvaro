@@ -1,0 +1,25 @@
+meta {
+  name: HR dashboard
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{gatewayUrl}}/api/dashboard/hr
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("has active employees", function() {
+    expect(res.body.activeEmployees).to.be.greaterThan(0);
+  });
+}

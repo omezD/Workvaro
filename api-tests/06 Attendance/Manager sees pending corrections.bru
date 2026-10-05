@@ -1,0 +1,25 @@
+meta {
+  name: Manager sees pending corrections
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{gatewayUrl}}/api/attendance/corrections/pending
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("contains the correction", function() {
+    expect(res.body.map(function(c) { return c.id; })).to.include(bru.getVar("correctionId"));
+  });
+}

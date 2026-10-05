@@ -1,0 +1,49 @@
+server:
+  port: ${EMPLOYEE_SERVICE_PORT:8081}
+  error:
+    include-message: never
+    include-stacktrace: never
+
+spring:
+  application:
+    name: employee-service
+  profiles:
+    default: dev
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${EMPLOYEE_DB_NAME:employee_db}
+    username: ${DB_USER:ems}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/ems}
+  data:
+    web:
+      pageable:
+        max-page-size: 100
+
+ems:
+  security:
+    # base64 of 32 random bytes, e.g. `openssl rand -base64 32`. Required; dev value lives in application-dev.yml
+    encryption-key: ${EMS_ENCRYPTION_KEY}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

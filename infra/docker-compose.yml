@@ -1,0 +1,49 @@
+# Local development infrastructure: PostgreSQL (one server, a database per service) + Keycloak.
+# The Spring Boot services run on the host with ./mvnw (see README). Ports bind to 127.0.0.1 only.
+#   docker compose -f infra/docker-compose.yml up -d
+name: ems
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-ems}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ems_dev_password}
+      POSTGRES_DB: postgres
+    ports:
+      - "127.0.0.1:${DB_HOST_PORT:-5434}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ems} -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8
+    restart: unless-stopped
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: ${DB_USER:-ems}
+      KC_DB_PASSWORD: ${DB_PASSWORD:-ems_dev_password}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin_dev_password}
+      # Tokens are issued as http://localhost:8180/realms/ems, which is what the services expect
+      KC_HOSTNAME: http://localhost:8180
+      KC_HTTP_PORT: "8080"
+      KC_HEALTH_ENABLED: "true"
+    ports:
+      - "127.0.0.1:8180:8080"
+    volumes:
+      - ./keycloak/realm-ems.json:/opt/keycloak/data/import/realm-ems.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

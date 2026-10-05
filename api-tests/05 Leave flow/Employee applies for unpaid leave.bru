@@ -1,0 +1,31 @@
+meta {
+  name: Employee applies for unpaid leave
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{gatewayUrl}}/api/leaves
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "leaveTypeId": {{ulTypeId}},
+    "startDate": "{{unpaidDate}}",
+    "endDate": "{{unpaidDate}}"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:post-response {
+  bru.setVar("unpaidLeaveId", res.body.id);
+}

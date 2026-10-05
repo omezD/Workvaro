@@ -1,0 +1,36 @@
+meta {
+  name: HR create with invalid data is 400
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{gatewayUrl}}/api/employees
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "empCode": "bad code!",
+    "firstName": "",
+    "email": "not-an-email",
+    "bankAccount": "12ab"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+tests {
+  test("lists the invalid fields", function() {
+    ["empCode", "firstName", "lastName", "email", "joinDate", "bankAccount"].forEach(function(f) {
+      expect(res.body.fieldErrors).to.have.property(f);
+    });
+  });
+}

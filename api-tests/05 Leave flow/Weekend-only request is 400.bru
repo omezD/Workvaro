@@ -1,0 +1,37 @@
+meta {
+  name: Weekend-only request is 400
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{gatewayUrl}}/api/leaves
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "leaveTypeId": {{clTypeId}},
+    "startDate": "{{saturday}}",
+    "endDate": "{{sunday}}"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+script:pre-request {
+  const year = Number(bru.getVar("leaveYear"));
+  const d = new Date(Date.UTC(year, 5, 1));
+  while (d.getUTCDay() !== 6) { d.setUTCDate(d.getUTCDate() + 1); }
+  const sat = d.toISOString().slice(0, 10);
+  d.setUTCDate(d.getUTCDate() + 1);
+  bru.setVar("saturday", sat);
+  bru.setVar("sunday", d.toISOString().slice(0, 10));
+}

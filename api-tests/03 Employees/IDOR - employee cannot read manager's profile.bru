@@ -1,0 +1,19 @@
+meta {
+  name: IDOR - employee cannot read manager's profile
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees/{{managerEmployeeId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 403
+}

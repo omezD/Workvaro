@@ -1,0 +1,34 @@
+meta {
+  name: Employee updates own contact details
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{gatewayUrl}}/api/employees/me
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "phone": "+91 98765 43210",
+    "address": "Pune, Maharashtra",
+    "emergencyContactName": "Ravi Patel",
+    "emergencyContactPhone": "+91 91234 56789"
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("saves the new phone", function() {
+    expect(res.body.phone).to.equal("+91 98765 43210");
+  });
+}

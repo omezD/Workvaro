@@ -1,0 +1,19 @@
+meta {
+  name: Checking in again is 409
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{gatewayUrl}}/api/attendance/check-in
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 409
+}

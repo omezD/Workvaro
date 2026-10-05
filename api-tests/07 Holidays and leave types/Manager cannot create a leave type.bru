@@ -1,0 +1,30 @@
+meta {
+  name: Manager cannot create a leave type
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{gatewayUrl}}/api/leave-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+body:json {
+  {
+    "code": "XX",
+    "name": "Nope",
+    "annualQuota": 5,
+    "paid": true,
+    "unlimited": false,
+    "active": true
+  }
+}
+
+assert {
+  res.status: eq 403
+}

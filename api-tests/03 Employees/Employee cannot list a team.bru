@@ -1,0 +1,19 @@
+meta {
+  name: Employee cannot list a team
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees/me/team
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 403
+}

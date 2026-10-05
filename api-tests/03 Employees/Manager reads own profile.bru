@@ -1,0 +1,23 @@
+meta {
+  name: Manager reads own profile
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+script:post-response {
+  bru.setVar("managerEmployeeId", res.body.id);
+}

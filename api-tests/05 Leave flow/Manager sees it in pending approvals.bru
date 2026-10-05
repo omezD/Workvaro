@@ -1,0 +1,25 @@
+meta {
+  name: Manager sees it in pending approvals
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{gatewayUrl}}/api/leaves/pending
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("contains the new request", function() {
+    expect(res.body.map(function(r) { return r.id; })).to.include(bru.getVar("leaveId"));
+  });
+}

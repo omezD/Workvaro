@@ -1,0 +1,29 @@
+meta {
+  name: Employee cannot create employees
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{gatewayUrl}}/api/employees
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "empCode": "EMPX",
+    "firstName": "No",
+    "lastName": "Way",
+    "email": "no.way@ems.local",
+    "joinDate": "2026-10-01"
+  }
+}
+
+assert {
+  res.status: eq 403
+}

@@ -1,0 +1,30 @@
+meta {
+  name: Employee reads own profile
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+script:post-response {
+  bru.setVar("employeeEmployeeId", res.body.id);
+}
+
+tests {
+  test("is the seeded employee with a manager", function() {
+    expect(res.body.email).to.equal("employee@ems.local");
+    expect(res.body.managerName).to.be.a("string");
+  });
+}

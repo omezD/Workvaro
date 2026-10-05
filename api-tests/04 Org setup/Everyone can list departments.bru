@@ -1,0 +1,29 @@
+meta {
+  name: Everyone can list departments
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{gatewayUrl}}/api/departments
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+script:post-response {
+  bru.setVar("engDeptId", res.body.find(function(d) { return d.code === "ENG"; }).id);
+}
+
+tests {
+  test("has the seeded departments", function() {
+    expect(res.body.map(function(d) { return d.code; })).to.include("ENG");
+  });
+}

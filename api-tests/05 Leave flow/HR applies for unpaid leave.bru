@@ -1,0 +1,31 @@
+meta {
+  name: HR applies for unpaid leave
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{gatewayUrl}}/api/leaves
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "leaveTypeId": {{ulTypeId}},
+    "startDate": "{{hrLeaveDate}}",
+    "endDate": "{{hrLeaveDate}}"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:post-response {
+  bru.setVar("hrLeaveId", res.body.id);
+}

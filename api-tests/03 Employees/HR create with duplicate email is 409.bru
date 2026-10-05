@@ -1,0 +1,33 @@
+meta {
+  name: HR create with duplicate email is 409
+  type: http
+  seq: 17
+}
+
+post {
+  url: {{gatewayUrl}}/api/employees
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "empCode": "{{dupCode}}",
+    "firstName": "Dup",
+    "lastName": "Licate",
+    "email": "employee@ems.local",
+    "joinDate": "2026-10-01"
+  }
+}
+
+assert {
+  res.status: eq 409
+}
+
+script:pre-request {
+  bru.setVar("dupCode", "D" + Date.now().toString().slice(-7));
+}

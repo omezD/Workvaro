@@ -1,0 +1,13 @@
+# Local development only. Production sets SPRING_PROFILES_ACTIVE=prod and real secrets via env vars.
+spring:
+  datasource:
+    password: ${DB_PASSWORD:ems_dev_password}
+
+ems:
+  security:
+    # DEV-ONLY key (all zero bytes). Never use in production.
+    encryption-key: ${EMS_ENCRYPTION_KEY:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+
+logging:
+  level:
+    com.ems: DEBUG

@@ -1,0 +1,126 @@
+{
+  "realm": "ems",
+  "displayName": "Employee Management System",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": false,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "editUsernameAllowed": false,
+
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "failureFactor": 5,
+  "waitIncrementSeconds": 60,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+
+  "passwordPolicy": "length(8) and upperCase(1) and lowerCase(1) and digits(1) and notUsername and notEmail",
+
+  "accessTokenLifespan": 900,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "offlineSessionIdleTimeout": 2592000,
+
+  "otpPolicyType": "totp",
+  "otpPolicyAlgorithm": "HmacSHA1",
+  "otpPolicyDigits": 6,
+  "otpPolicyPeriod": 30,
+  "otpPolicyLookAheadWindow": 1,
+
+  "roles": {
+    "realm": [
+      { "name": "ADMIN", "description": "Company settings, org setup, users and roles, audit" },
+      { "name": "HR", "description": "Employee records, leave and attendance administration" },
+      { "name": "MANAGER", "description": "Approves leave and attendance corrections for direct reports" },
+      { "name": "EMPLOYEE", "description": "Every staff member" }
+    ]
+  },
+
+  "clients": [
+    {
+      "clientId": "ems-frontend",
+      "name": "EMS Angular frontend",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "http://localhost:4200",
+      "baseUrl": "/",
+      "redirectUris": ["http://localhost:4200/*"],
+      "webOrigins": ["http://localhost:4200"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:4200/*"
+      }
+    },
+    {
+      "clientId": "ems-api-test",
+      "name": "API testing (Bruno) - DEV ONLY, delete in production",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [],
+      "webOrigins": []
+    }
+  ],
+
+  "users": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "username": "admin",
+      "email": "admin@ems.local",
+      "emailVerified": true,
+      "firstName": "Asha",
+      "lastName": "Admin",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "Admin@Ems2026", "temporary": false }],
+      "realmRoles": ["ADMIN", "MANAGER", "EMPLOYEE"]
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "username": "hr",
+      "email": "hr@ems.local",
+      "emailVerified": true,
+      "firstName": "Harini",
+      "lastName": "Rao",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "Hr@Ems2026", "temporary": false }],
+      "realmRoles": ["HR", "EMPLOYEE"]
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333333",
+      "username": "manager",
+      "email": "manager@ems.local",
+      "emailVerified": true,
+      "firstName": "Manoj",
+      "lastName": "Kumar",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "Manager@Ems2026", "temporary": false }],
+      "realmRoles": ["MANAGER", "EMPLOYEE"]
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444444",
+      "username": "employee",
+      "email": "employee@ems.local",
+      "emailVerified": true,
+      "firstName": "Esha",
+      "lastName": "Patel",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "Employee@Ems2026", "temporary": false }],
+      "realmRoles": ["EMPLOYEE"]
+    }
+  ]
+}

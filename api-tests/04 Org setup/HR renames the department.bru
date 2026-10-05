@@ -1,0 +1,32 @@
+meta {
+  name: HR renames the department
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{gatewayUrl}}/api/departments/{{deptId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "code": "{{deptCode}}",
+    "name": "Renamed {{deptCode}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("name updated", function() {
+    expect(res.body.name).to.equal("Renamed " + bru.getVar("deptCode"));
+  });
+}

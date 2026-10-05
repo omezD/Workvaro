@@ -1,0 +1,49 @@
+meta {
+  name: HR creates an employee
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{gatewayUrl}}/api/employees
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+body:json {
+  {
+    "empCode": "{{newEmpCode}}",
+    "firstName": "Test",
+    "lastName": "Hire",
+    "email": "{{newEmpEmail}}",
+    "phone": "+91 90000 00000",
+    "joinDate": "2026-10-01",
+    "managerId": {{managerEmployeeId}},
+    "bankAccount": "123456789012"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  const suffix = Date.now().toString().slice(-7);
+  bru.setVar("newEmpCode", "T" + suffix);
+  bru.setVar("newEmpEmail", "test." + suffix + "@ems.local");
+}
+
+script:post-response {
+  bru.setVar("newEmployeeId", res.body.id);
+}
+
+tests {
+  test("is active and reports to the manager", function() {
+    expect(res.body.status).to.equal("ACTIVE");
+    expect(res.body.managerId).to.equal(bru.getVar("managerEmployeeId"));
+  });
+}

@@ -1,0 +1,26 @@
+meta {
+  name: HR reads new employee with full bank account
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees/{{newEmployeeId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("bank account is decrypted for HR", function() {
+    expect(res.body.bankAccount).to.equal("123456789012");
+    expect(res.body.bankAccountMasked).to.equal(false);
+  });
+}

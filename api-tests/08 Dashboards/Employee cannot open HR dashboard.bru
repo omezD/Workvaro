@@ -1,0 +1,19 @@
+meta {
+  name: Employee cannot open HR dashboard
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{gatewayUrl}}/api/dashboard/hr
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 403
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Employee dashboard
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{gatewayUrl}}/api/dashboard/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("has balances and holidays", function() {
+    expect(res.body.balances).to.be.an("array").that.is.not.empty;
+    expect(res.body.upcomingHolidays).to.be.an("array");
+  });
+}

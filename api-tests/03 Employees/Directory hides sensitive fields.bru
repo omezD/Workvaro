@@ -1,0 +1,30 @@
+meta {
+  name: Directory hides sensitive fields
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees?size=50
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("lists people without bank or personal data", function() {
+    expect(res.body.content.length).to.be.greaterThan(0);
+    res.body.content.forEach(function(e) {
+      expect(e).to.not.have.property("bankAccount");
+      expect(e).to.not.have.property("dateOfBirth");
+      expect(e).to.not.have.property("address");
+    });
+  });
+}

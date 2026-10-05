@@ -1,0 +1,31 @@
+meta {
+  name: HR's manager (admin) rejects it
+  type: http
+  seq: 19
+}
+
+patch {
+  url: {{gatewayUrl}}/api/leaves/{{hrLeaveId}}/reject
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "comment": "Busy week"
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("is rejected", function() {
+    expect(res.body.status).to.equal("REJECTED");
+  });
+}

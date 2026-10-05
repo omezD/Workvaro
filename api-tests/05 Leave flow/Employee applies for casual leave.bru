@@ -1,0 +1,39 @@
+meta {
+  name: Employee applies for casual leave
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{gatewayUrl}}/api/leaves
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{employeeToken}}
+}
+
+body:json {
+  {
+    "leaveTypeId": {{clTypeId}},
+    "startDate": "{{leaveDate}}",
+    "endDate": "{{leaveDate}}",
+    "reason": "API test"
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:post-response {
+  bru.setVar("leaveId", res.body.id);
+}
+
+tests {
+  test("is pending for one working day", function() {
+    expect(res.body.status).to.equal("PENDING");
+    expect(res.body.days).to.equal(1);
+  });
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Manager team calendar
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{gatewayUrl}}/api/leaves/team-calendar?month={{leaveMonth}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("shows the approved leave", function() {
+    expect(res.body.map(function(e) { return e.requestId; })).to.include(bru.getVar("leaveId"));
+  });
+}

@@ -1,0 +1,19 @@
+meta {
+  name: HR deletes the holiday
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{gatewayUrl}}/api/holidays/{{holidayId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{hrToken}}
+}
+
+assert {
+  res.status: eq 204
+}

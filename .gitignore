@@ -1,0 +1,32 @@
+# Build output
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# Secrets: never commit real values (use .env.example as the template)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# OS / logs
+.DS_Store
+Thumbs.db
+*.log
+
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Frontend (Day 2)
+node_modules/
+dist/
+.angular/

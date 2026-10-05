@@ -1,0 +1,25 @@
+meta {
+  name: Manager reads direct report with masked bank
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{gatewayUrl}}/api/employees/{{employeeEmployeeId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{managerToken}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("bank account is flagged as masked", function() {
+    expect(res.body.bankAccountMasked).to.equal(true);
+  });
+}
