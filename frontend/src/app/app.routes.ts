@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard, roleGuard } from './core/auth/auth.guards';
 
-const placeholder = () => import('./features/placeholder/placeholder-page').then((m) => m.PlaceholderPage);
-
 export const routes: Routes = [
   {
     path: '',
@@ -23,40 +21,56 @@ export const routes: Routes = [
       {
         path: 'people',
         title: 'People | Workvaro',
-        loadComponent: placeholder,
-        data: { title: 'People', subtitle: 'Find colleagues and their contact details.', icon: 'people' },
+        loadComponent: () => import('./features/people/people-page').then((m) => m.PeoplePage),
+      },
+      {
+        path: 'people/new',
+        title: 'Add employee | Workvaro',
+        canActivate: [roleGuard('HR', 'ADMIN')],
+        loadComponent: () => import('./features/people/employee-form-page').then((m) => m.EmployeeFormPage),
+      },
+      {
+        path: 'people/:id',
+        title: 'Profile | Workvaro',
+        loadComponent: () => import('./features/people/person-page').then((m) => m.PersonPage),
+      },
+      {
+        path: 'people/:id/edit',
+        title: 'Edit employee | Workvaro',
+        canActivate: [roleGuard('HR', 'ADMIN')],
+        loadComponent: () => import('./features/people/employee-form-page').then((m) => m.EmployeeFormPage),
+      },
+      {
+        path: 'profile',
+        title: 'My profile | Workvaro',
+        loadComponent: () => import('./features/people/my-profile-page').then((m) => m.MyProfilePage),
       },
       {
         path: 'leave',
         title: 'Leave | Workvaro',
-        loadComponent: placeholder,
-        data: { title: 'Leave', subtitle: 'Apply for leave, track requests and see your balance.', icon: 'leave' },
+        loadComponent: () => import('./features/leave/leave-page').then((m) => m.LeavePage),
       },
       {
         path: 'attendance',
         title: 'Attendance | Workvaro',
-        loadComponent: placeholder,
-        data: { title: 'Attendance', subtitle: 'Check in and out, and fix a missed day.', icon: 'clock' },
+        loadComponent: () => import('./features/attendance/attendance-page').then((m) => m.AttendancePage),
       },
       {
         path: 'approvals',
         title: 'Approvals | Workvaro',
         canActivate: [roleGuard('MANAGER', 'HR')],
-        loadComponent: placeholder,
-        data: { title: 'Approvals', subtitle: 'Leave and attendance requests waiting for your decision.', icon: 'check' },
+        loadComponent: () => import('./features/approvals/approvals-page').then((m) => m.ApprovalsPage),
       },
       {
         path: 'holidays',
         title: 'Holidays | Workvaro',
-        loadComponent: placeholder,
-        data: { title: 'Holidays', subtitle: 'Company holidays for the year.', icon: 'star' },
+        loadComponent: () => import('./features/holidays/holidays-page').then((m) => m.HolidaysPage),
       },
       {
         path: 'org',
         title: 'Org setup | Workvaro',
         canActivate: [roleGuard('ADMIN', 'HR')],
-        loadComponent: placeholder,
-        data: { title: 'Org setup', subtitle: 'Departments, designations and leave types.', icon: 'building' },
+        loadComponent: () => import('./features/org/org-page').then((m) => m.OrgPage),
       },
       {
         path: 'no-access',

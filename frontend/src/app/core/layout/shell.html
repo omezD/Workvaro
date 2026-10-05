@@ -71,6 +71,9 @@
       <span>{{ user.email }}</span>
     </div>
   }
+  <a mat-menu-item routerLink="/app/profile" (click)="closeOnMobile()">
+    <wv-icon name="people" /> <span>My profile</span>
+  </a>
   <button mat-menu-item type="button" (click)="auth.manageAccount()">
     <wv-icon name="shield" /> <span>Password and sign-in security</span>
   </button>

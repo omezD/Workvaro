@@ -28,19 +28,24 @@ describe('apiErrorInterceptor', () => {
     backend = TestBed.inject(HttpTestingController);
   });
 
-  /** Sends a GET, answers it with `status`, and returns the error the caller received. */
-  function fail(url: string, status: number, body: object | null = null): unknown {
+  /** Sends a request, answers it with `status`, and returns the error the caller received. */
+  function fail(url: string, status: number, body: object | null = null, method: 'GET' | 'PATCH' = 'GET'): unknown {
     let received: unknown;
-    http.get(url).subscribe({ error: (e) => (received = e) });
+    http.request(method, url, { body: method === 'GET' ? undefined : {} }).subscribe({ error: (e) => (received = e) });
     backend.expectOne(url).flush(body, { status, statusText: 'x' });
     return received;
   }
 
-  it('shows the server message for 403 and still passes the error on', () => {
-    const err = fail('/api/leaves/9/approve', 403, { status: 403, message: 'Only the employee manager can decide' });
+  it('shows the server message when an action is refused (403) and still passes the error on', () => {
+    const err = fail('/api/leaves/9/approve', 403, { status: 403, message: 'Only the employee manager can decide' }, 'PATCH');
 
     expect(notify.error).toHaveBeenCalledWith('Only the employee manager can decide');
     expect(err).toBeTruthy();
+  });
+
+  it('leaves a refused read (403 on GET) to the screen', () => {
+    fail('/api/employees/3', 403, { status: 403, message: 'You can only view your own profile' });
+    expect(notify.error).not.toHaveBeenCalled();
   });
 
   it('starts sign-in again when the session has expired', () => {

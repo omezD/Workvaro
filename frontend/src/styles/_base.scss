@@ -85,3 +85,57 @@ a {
     scroll-behavior: auto !important;
   }
 }
+
+// Data tables (leave requests, org setup, attendance history)
+.wv-table-wrap {
+  overflow-x: auto;
+}
+
+.wv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--wv-muted);
+    font-size: var(--wv-text-sm);
+    padding: 0 12px 10px;
+    border-bottom: 1px solid var(--wv-line);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid var(--wv-line);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .actions {
+    text-align: right;
+    white-space: nowrap;
+  }
+}
+
+// Placeholder blocks shown while data loads
+.wv-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  > span {
+    height: 44px;
+    border-radius: 10px;
+    background: var(--wv-sunk);
+  }
+}

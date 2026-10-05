@@ -1,0 +1,95 @@
+<wv-page-header title="Org setup" subtitle="Departments, designations and leave types used across Workvaro. Every change is recorded in the audit log." />
+
+<mat-tab-group animationDuration="150ms" mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="Departments">
+    <section class="wv-card tab">
+      <div class="bar">
+        <span class="wv-muted">{{ departments.value().length }} departments</span>
+        <button mat-flat-button type="button" (click)="editDepartment()">Add department</button>
+      </div>
+      @if (departments.error()) {
+        <wv-load-error (retry)="departments.reload()" />
+      } @else {
+        <div class="wv-table-wrap">
+          <table class="wv-table">
+            <thead><tr><th>Code</th><th>Name</th><th>Description</th><th class="actions"><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody>
+              @for (d of departments.value(); track d.id) {
+                <tr>
+                  <td><span class="code">{{ d.code }}</span></td>
+                  <td><b>{{ d.name }}</b></td>
+                  <td class="wv-muted">{{ d.description }}</td>
+                  <td class="actions">
+                    <button mat-button type="button" (click)="editDepartment(d)">Edit</button>
+                    <button mat-button type="button" class="danger" (click)="deleteDepartment(d)">Delete</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </mat-tab>
+
+  <mat-tab label="Designations">
+    <section class="wv-card tab">
+      <div class="bar">
+        <span class="wv-muted">{{ designations.value().length }} designations, most junior first</span>
+        <button mat-flat-button type="button" (click)="editDesignation()">Add designation</button>
+      </div>
+      @if (designations.error()) {
+        <wv-load-error (retry)="designations.reload()" />
+      } @else {
+        <div class="wv-table-wrap">
+          <table class="wv-table">
+            <thead><tr><th>Title</th><th class="num">Level</th><th>Description</th><th class="actions"><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody>
+              @for (d of designations.value(); track d.id) {
+                <tr>
+                  <td><b>{{ d.title }}</b></td>
+                  <td class="num">{{ d.level }}</td>
+                  <td class="wv-muted">{{ d.description }}</td>
+                  <td class="actions">
+                    <button mat-button type="button" (click)="editDesignation(d)">Edit</button>
+                    <button mat-button type="button" class="danger" (click)="deleteDesignation(d)">Delete</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </mat-tab>
+
+  <mat-tab label="Leave types">
+    <section class="wv-card tab">
+      <div class="bar">
+        <span class="wv-muted">Allowances apply per calendar year. Turn a type off instead of deleting it, so history stays intact.</span>
+        <button mat-flat-button type="button" (click)="editLeaveType()">Add leave type</button>
+      </div>
+      @if (leaveTypes.error()) {
+        <wv-load-error (retry)="leaveTypes.reload()" />
+      } @else {
+        <div class="wv-table-wrap">
+          <table class="wv-table">
+            <thead><tr><th>Code</th><th>Name</th><th class="num">Days per year</th><th>Paid</th><th>Status</th><th class="actions"><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody>
+              @for (t of leaveTypes.value(); track t.id) {
+                <tr>
+                  <td><span class="code">{{ t.code }}</span></td>
+                  <td><b>{{ t.name }}</b></td>
+                  <td class="num">{{ t.unlimited ? 'No limit' : t.annualQuota }}</td>
+                  <td>{{ t.paid ? 'Paid' : 'Unpaid' }}</td>
+                  <td><wv-status-chip [status]="t.active ? 'ACTIVE' : 'CANCELLED'" [label]="t.active ? 'Available' : 'Turned off'" /></td>
+                  <td class="actions"><button mat-button type="button" (click)="editLeaveType(t)">Edit</button></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </mat-tab>
+</mat-tab-group>

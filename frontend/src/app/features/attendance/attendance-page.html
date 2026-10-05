@@ -1,0 +1,104 @@
+<wv-page-header title="Attendance" subtitle="Check in when you start, check out when you leave. Missed a day? Ask your manager to fix it." />
+
+<mat-tab-group animationDuration="150ms" mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="My attendance">
+    <div class="tab">
+      <div class="top">
+        <wv-my-day-card (changed)="refresh()" />
+        <section class="wv-card summary" aria-label="Month summary">
+          <div class="month-nav">
+            <button mat-icon-button type="button" aria-label="Previous month" (click)="shiftMonth(-1)"><wv-icon name="arrowLeft" /></button>
+            <h2>{{ monthLabel() }}</h2>
+            <button mat-icon-button type="button" aria-label="Next month" [disabled]="isCurrentMonth()" (click)="shiftMonth(1)">
+              <wv-icon name="arrowLeft" class="flip" />
+            </button>
+          </div>
+          <dl class="stats">
+            <div><dt>Days in office</dt><dd>{{ summary().present }}</dd></div>
+            <div><dt>Average day</dt><dd>{{ summary().average }}</dd></div>
+            <div><dt>Corrected days</dt><dd>{{ summary().corrected }}</dd></div>
+            <div [class.alert]="summary().missing"><dt>Days without check-in</dt><dd>{{ summary().missing }}</dd></div>
+          </dl>
+        </section>
+      </div>
+
+      <section class="wv-card">
+        <h2>Day by day</h2>
+        @if (attendance.error()) {
+          <wv-load-error (retry)="attendance.reload()" />
+        } @else if (attendance.isLoading() && !attendance.hasValue()) {
+          <div class="wv-skeleton"><span></span><span></span><span></span></div>
+        } @else if (days().length === 0) {
+          <p class="wv-muted">No working days in this month yet.</p>
+        } @else {
+          <div class="wv-table-wrap">
+            <table class="wv-table">
+              <thead>
+                <tr><th>Day</th><th>In</th><th>Out</th><th class="num">Worked</th><th>Note</th><th class="actions"><span class="sr-only">Actions</span></th></tr>
+              </thead>
+              <tbody>
+                @for (d of days(); track d.date) {
+                  <tr [class.missing]="!d.record && !d.reason && d.date !== today">
+                    <td><b>{{ fmtWeekday(d.date) }}</b></td>
+                    <td>{{ d.record ? fmtTime(d.record.checkIn) : '' }}</td>
+                    <td>{{ d.record?.checkOut ? fmtTime(d.record!.checkOut!) : '' }}</td>
+                    <td class="num">{{ d.record?.workedMinutes != null ? fmtDuration(d.record!.workedMinutes!) : '' }}</td>
+                    <td>
+                      @if (d.record?.corrected) {
+                        <span class="tag">Corrected</span>
+                      } @else if (d.reason) {
+                        <span class="wv-muted">{{ d.label }}</span>
+                      } @else if (!d.record && d.date === today) {
+                        <span class="wv-muted">Not checked in yet</span>
+                      } @else if (!d.record && d.fixPending) {
+                        <wv-status-chip status="PENDING" label="Fix requested" />
+                      } @else if (!d.record) {
+                        <span class="missing-text">No check-in</span>
+                      } @else if (!d.record.checkOut && d.date < yesterday) {
+                        <span class="missing-text">No check-out</span>
+                      }
+                    </td>
+                    <td class="actions">
+                      @if ((!d.record && !d.reason && !d.fixPending && d.date !== today) || (d.record && !d.record.checkOut && d.date < yesterday)) {
+                        <button mat-button type="button" (click)="requestFix(d.date)">Request fix</button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+
+      @if (corrections.value().length) {
+        <section class="wv-card">
+          <h2>My correction requests</h2>
+          <ul class="fixes">
+            @for (c of corrections.value(); track c.id) {
+              <li>
+                <div>
+                  <b>{{ fmtWeekday(c.workDate) }}, {{ fmtTime(c.requestedCheckIn) }} to {{ fmtTime(c.requestedCheckOut) }}</b>
+                  <span class="wv-muted">{{ c.reason }}{{ c.decisionComment ? '. ' + c.decidedByName + ': "' + c.decisionComment + '"' : '' }}</span>
+                </div>
+                <wv-status-chip [status]="c.status" />
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  </mat-tab>
+
+  @if (canSeeTeam()) {
+    <mat-tab [label]="orgWide() ? 'Company today' : 'Team today'">
+      <div class="tab">
+        @if (board.error()) {
+          <section class="wv-card"><wv-load-error (retry)="board.reload()" /></section>
+        } @else {
+          <wv-team-today-card [title]="orgWide() ? 'Everyone today' : 'Your team today'" [board]="board.value()" [limit]="500" />
+        }
+      </div>
+    </mat-tab>
+  }
+</mat-tab-group>

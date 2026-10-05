@@ -8,9 +8,10 @@ import { NotifyService } from '../notify/notify.service';
 import { apiErrorOf } from './api-error';
 
 /**
- * Handles API failures that no screen can fix by itself: offline, expired session, no permission,
- * rate limiting and server errors. 400/404/409 are left to the screen that made the request, which
- * knows how to show them (for example next to a form field). The error is always re-thrown.
+ * Handles API failures that no screen can fix by itself: offline, expired session, a refused action,
+ * rate limiting and server errors. 400/404/409, and 403 on reads, are left to the screen that made the
+ * request, which knows how to show them (a field error, a "this profile is private" state).
+ * The error is always re-thrown.
  */
 export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const notify = inject(NotifyService);
@@ -25,7 +26,7 @@ export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
           notify.error("Can't reach Workvaro. Check your connection and try again.");
         } else if (err.status === 401) {
           void auth.login(router.url);
-        } else if (err.status === 403) {
+        } else if (err.status === 403 && req.method !== 'GET') {
           notify.error(body?.message ?? "You don't have permission to do that.");
         } else if (err.status === 429) {
           notify.error('Too many requests. Wait a minute, then try again.');

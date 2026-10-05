@@ -1,0 +1,28 @@
+.tab {
+  margin-top: 20px;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+
+  span {
+    max-width: 64ch;
+  }
+}
+
+.code {
+  font-weight: 600;
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--wv-sunk);
+}
+
+.danger {
+  --mat-button-text-label-text-color: var(--wv-alert-text);
+}

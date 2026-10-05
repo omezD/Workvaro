@@ -1,0 +1,158 @@
+<wv-page-header title="Leave" subtitle="Your balance and requests. Weekends and holidays are never counted as leave days.">
+  <button mat-flat-button type="button" (click)="apply()">Apply for leave</button>
+</wv-page-header>
+
+<mat-tab-group animationDuration="150ms" mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="My leave">
+    <div class="tab">
+      <section class="wv-card">
+        <h2>Balance for {{ year() }}</h2>
+        @if (balances.error()) {
+          <wv-load-error (retry)="balances.reload()" />
+        } @else {
+          <div class="rings">
+            @for (b of balances.value(); track b.leaveTypeId) {
+              <div class="ring">
+                <wv-balance-ring [label]="b.leaveTypeName" [available]="b.available" [total]="b.allocated" [used]="b.used" [unlimited]="b.unlimited" />
+                @if (b.pending) {
+                  <span class="pending">{{ b.pending }} pending</span>
+                }
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="wv-card">
+        <h2>Coming up</h2>
+        @if (mine.isLoading() && !mine.hasValue()) {
+          <div class="wv-skeleton"><span></span><span></span></div>
+        } @else if (upcoming().length === 0) {
+          <wv-empty-state icon="leave" title="No leave planned" text="Apply for leave and your manager sees the request on their dashboard right away.">
+            <button mat-stroked-button type="button" (click)="apply()">Apply for leave</button>
+          </wv-empty-state>
+        } @else {
+          <ul class="list">
+            @for (l of upcoming(); track l.id) {
+              <li>
+                <div class="when">
+                  <b>{{ fmtRange(l.startDate, l.endDate) }}</b>
+                  <span>{{ l.leaveTypeName }}, {{ l.days }} day{{ l.days === 1 ? '' : 's' }}</span>
+                </div>
+                <div class="note">
+                  @if (l.reason) {
+                    <span>{{ l.reason }}</span>
+                  }
+                  @if (l.decidedByName) {
+                    <span class="wv-muted">Approved by {{ l.decidedByName }}</span>
+                  }
+                </div>
+                <wv-status-chip [status]="l.status" />
+                @if (l.status === 'PENDING') {
+                  <button mat-button type="button" (click)="cancel(l)">Cancel</button>
+                } @else {
+                  <span></span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      @if (history().length) {
+        <section class="wv-card">
+          <h2>Past and closed requests</h2>
+          <ul class="list">
+            @for (l of history(); track l.id) {
+              <li>
+                <div class="when">
+                  <b>{{ fmtRange(l.startDate, l.endDate) }}</b>
+                  <span>{{ l.leaveTypeName }}, {{ l.days }} day{{ l.days === 1 ? '' : 's' }}</span>
+                </div>
+                <div class="note">
+                  @if (l.decisionComment) {
+                    <span>"{{ l.decisionComment }}"</span>
+                  }
+                  @if (l.decidedByName) {
+                    <span class="wv-muted">{{ l.status === 'REJECTED' ? 'Rejected' : 'Approved' }} by {{ l.decidedByName }}</span>
+                  }
+                </div>
+                <wv-status-chip [status]="l.status" />
+                <span></span>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  </mat-tab>
+
+  @if (canSeeTeam()) {
+    <mat-tab [label]="orgWide() ? 'Calendar' : 'Team calendar'">
+      <div class="tab">
+        <section class="wv-card">
+          <div class="month-nav">
+            <button mat-icon-button type="button" aria-label="Previous month" (click)="shiftMonth(-1)">
+              <wv-icon name="arrowLeft" />
+            </button>
+            <h2>{{ monthLabel() }}</h2>
+            <button mat-icon-button type="button" aria-label="Next month" (click)="shiftMonth(1)">
+              <wv-icon name="arrowLeft" class="flip" />
+            </button>
+          </div>
+          <wv-leave-strip [month]="month()" [entries]="calendar.value()" [holidays]="holidayMap()" />
+        </section>
+      </div>
+    </mat-tab>
+
+    <mat-tab [label]="orgWide() ? 'All requests' : 'Team requests'">
+      <div class="tab">
+        <section class="wv-card">
+          <div class="filters">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Status</mat-label>
+              <mat-select [ngModel]="status()" (ngModelChange)="setStatus($event)">
+                @for (s of statuses; track s.value) {
+                  <mat-option [value]="s.value">{{ s.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            @if (all.value(); as p) {
+              <span class="wv-muted">{{ p.totalElements }} request{{ p.totalElements === 1 ? '' : 's' }}</span>
+            }
+          </div>
+
+          @if (all.error()) {
+            <wv-load-error (retry)="all.reload()" />
+          } @else if (all.value()?.content?.length === 0) {
+            <p class="wv-muted empty">No requests match this filter.</p>
+          } @else {
+            <div class="wv-table-wrap">
+              <table class="wv-table">
+                <thead>
+                  <tr><th>Person</th><th>Dates</th><th>Type</th><th class="num">Days</th><th>Status</th><th>Decision</th></tr>
+                </thead>
+                <tbody>
+                  @for (l of all.value()?.content ?? []; track l.id) {
+                    <tr>
+                      <td><b>{{ l.employeeName }}</b></td>
+                      <td>{{ fmtRange(l.startDate, l.endDate) }}</td>
+                      <td>{{ l.leaveTypeName }}</td>
+                      <td class="num">{{ l.days }}</td>
+                      <td><wv-status-chip [status]="l.status" /></td>
+                      <td class="wv-muted">{{ l.decidedByName ?? '' }}{{ l.decisionComment ? ': ' + l.decisionComment : '' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            @if ((all.value()?.totalPages ?? 1) > 1) {
+              <mat-paginator [length]="all.value()!.totalElements" [pageSize]="pageSize" [pageIndex]="page()"
+                [hidePageSize]="true" (page)="onPage($event)" aria-label="Pages of leave requests" />
+            }
+          }
+        </section>
+      </div>
+    </mat-tab>
+  }
+</mat-tab-group>
