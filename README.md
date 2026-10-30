@@ -1,7 +1,7 @@
 # EMS: Employee Management System
 
 Spring Boot microservices backend (Java 17, Boot 3.5, Spring Cloud 2025.0) + Keycloak + PostgreSQL.
-The Angular frontend comes on Day 2 (`frontend/`). Plans: [EMS-Project-Plan.md](EMS-Project-Plan.md), [EMS-Execution-Plan.md](EMS-Execution-Plan.md).
+Angular frontend (Workvaro) in `frontend/`. Plans: [EMS-Project-Plan.md](EMS-Project-Plan.md), [EMS-Execution-Plan.md](EMS-Execution-Plan.md).
 
 ## Layout
 
@@ -83,12 +83,39 @@ Without a token the gateway answers 401 (Checkpoint 2).
   dummy all-zero key; production must set a real one.
 - Errors are safe JSON (`ApiError`): no stack traces or SQL. Every write is recorded in each service's `audit_log`.
 
-### Before production
-- Run with `SPRING_PROFILES_ACTIVE=prod` and set `DB_PASSWORD`, `EMS_ENCRYPTION_KEY` and the Keycloak admin
-  password. Don't publish service or DB ports; expose only the gateway and Keycloak behind HTTPS.
-- In Keycloak: delete the `ems-api-test` client and the seed users, set the `ems-frontend` URLs to the real
-  domain, and enforce TOTP for ADMIN/HR by adding the **Configure OTP** required action to those users (the
-  default browser flow then asks for the code on every login).
+## Deploy to production (one VPS)
+
+Everything runs in Docker on one server (Ubuntu, 4-8 GB RAM). Only Caddy is public: it serves the web app,
+proxies `/api` to the gateway, fronts Keycloak, and gets HTTPS certificates automatically.
+
+| File | What |
+|---|---|
+| `Dockerfile` | one image recipe for every Spring service (`--build-arg MODULE=...`), non-root JRE 17 |
+| `frontend/Dockerfile` | builds Angular and bakes it into a Caddy image |
+| `infra/caddy/Caddyfile` | HTTPS, security headers + CSP, SPA routing, `/api` → gateway, auth domain → Keycloak |
+| `infra/docker-compose.prod.yml` | postgres, keycloak (`start`, proxy mode), 3 services, web. No DB/service ports published |
+| `infra/.env.prod.example` | every production setting (copy to `infra/.env`) |
+| `infra/scripts/make-prod-realm.mjs` | production Keycloak realm: removes the test client, real URLs, one-time passwords, forced TOTP |
+| `infra/scripts/backup.sh` | nightly `pg_dump` of all three databases, keeps 14 days |
+| `.github/workflows/ci.yml` | on every push: `mvnw verify`, Angular build + tests, both Docker images build |
+
+Steps:
+
+1. Point two DNS A records at the server, e.g. `hr.client.com` (app) and `auth.client.com` (login).
+2. On the server: install Docker, clone the repo, then `cp infra/.env.prod.example infra/.env` and fill in
+   every value (`openssl rand -base64 32` for `EMS_ENCRYPTION_KEY`, long random passwords).
+3. `node infra/scripts/make-prod-realm.mjs`. Save the printed one-time passwords and hand them over privately.
+   (No Node on the server? Run it locally with the same `infra/.env` and copy `infra/keycloak/prod/` up.)
+4. `docker compose -f infra/docker-compose.prod.yml --env-file infra/.env up -d --build`
+5. Open `https://hr.client.com`. Each user signs in, sets a new password and scans the TOTP QR code.
+6. Cron the backup: `0 2 * * * cd /opt/ems && sh infra/scripts/backup.sh`, and copy `/var/backups/ems` off
+   the server. Test one restore (the command is at the bottom of the script).
+7. Firewall: allow only 22, 80 and 443 (`ufw allow OpenSSH; ufw allow 80,443/tcp; ufw enable`).
+
+Notes:
+- The Flyway seed data (4 demo employees linked to the 4 Keycloak users) also loads in production. Rename them in
+  the app to the real people, or mark them exited, after go-live.
+- The Keycloak admin console is at `https://auth.client.com/admin`. Use the `KEYCLOAK_ADMIN` login from `.env`.
 
 ## Business rules (leave and attendance)
 

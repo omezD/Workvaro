@@ -1,0 +1,7 @@
+# Used instead of the root .dockerignore when building frontend/Dockerfile (context = repo root)
+**
+!frontend
+!infra/caddy
+frontend/node_modules
+frontend/dist
+frontend/.angular

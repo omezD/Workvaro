@@ -1,0 +1,12 @@
+**/target
+**/node_modules
+frontend
+design
+api-tests
+.git
+.github
+.claude
+infra
+*.md
+.env
+.env.*

@@ -1,5 +1,17 @@
 # EMS: 2-Day Execution Plan
 
+## Status (2026-10-30)
+| Step | State |
+|---|---|
+| 0 Prerequisites | ⚠️ JDK 17 not installed; Docker installed but cannot start (WSL is not installed) |
+| 1-5 Backend | ✅ built, `mvnw verify` green (not yet run against a live DB/Keycloak) |
+| 6 Automated tests | ✅ 97 backend tests; 35 frontend tests pass |
+| 7 Bruno collection | ✅ written (85 requests); ⏳ Checkpoint 4 needs a running stack |
+| 8-9 Angular app | ✅ all screens on the real API, plus `npm run demo` (fake backend) |
+| 10 Polish | ✅ production build clean |
+| Deployment pack | ✅ Dockerfiles, prod compose, Caddy HTTPS, prod realm script, backups, GitHub Actions CI |
+| Weeks 3-5 | ⏳ document-service, notification-service + RabbitMQ, audit-service |
+
 Order: **Backend → API testing → Frontend.**
 Scope is the 2-week reduced scope from [EMS-Project-Plan.md](EMS-Project-Plan.md): Keycloak + api-gateway + employee-service + leave-attendance-service + Angular.
 Claude writes the code. You install the tools, run the stack, and test and approve at each checkpoint.
